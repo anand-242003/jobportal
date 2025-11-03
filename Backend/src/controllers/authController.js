@@ -34,13 +34,12 @@ export const signup = async (req, res) => {
 
     const token = generateToken(newUser);
 
-    res.cookie("token", token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === "production", 
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, 
-    });
-
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production", 
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
     res.status(201).json({
       message: "User registered successfully",
       user: { id: newUser.id, fullName: newUser.fullName, email: newUser.email },
