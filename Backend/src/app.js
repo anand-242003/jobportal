@@ -21,6 +21,9 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use("/api/auth", authrouter);
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend is alive!" });
+});
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
