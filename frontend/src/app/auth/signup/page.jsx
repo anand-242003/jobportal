@@ -2,16 +2,20 @@
 import { useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
+import styles from "./signup.module.css"; 
+import Link from "next/link"; 
 
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
+    phoneNumber: "", 
     password: "",
     role: "Student",
   });
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,23 +24,31 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIsError(false);
+      setMessage("Creating account...");
+      
       const res = await axiosInstance.post("/auth/signup", form);
+      
       setMessage(res.data.message);
       setTimeout(() => router.push("/auth/login"), 1500); 
+      
     } catch (err) {
+      setIsError(true);
       setMessage(err.response?.data?.message || "Error signing up");
     }
   };
 
+  const getMessageClass = () => {
+    if (!message) return styles.message;
+    return isError
+      ? `${styles.message} ${styles.error}`
+      : `${styles.message} ${styles.success}`;
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-8 w-96 border border-gray-200"
-      >
-        <h1 className="text-2xl font-semibold text-center mb-6 text-blue-600">
-          Create Account
-        </h1>
+    <div className={styles.pageContainer}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h1 className={styles.title}>Create Account</h1>
 
         <input
           type="text"
@@ -44,7 +56,8 @@ export default function SignupPage() {
           placeholder="Full Name"
           onChange={handleChange}
           value={form.fullName}
-          className="w-full mb-3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
         <input
           type="email"
@@ -52,15 +65,17 @@ export default function SignupPage() {
           placeholder="Email"
           onChange={handleChange}
           value={form.email}
-          className="w-full mb-3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
-         <input
-          type="number"
+        <input
+          type="tel" 
           name="phoneNumber"
           placeholder="Phone Number"
           onChange={handleChange}
           value={form.phoneNumber}
-          className="w-full mb-3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
         <input
           type="password"
@@ -68,29 +83,30 @@ export default function SignupPage() {
           placeholder="Password"
           onChange={handleChange}
           value={form.password}
-          className="w-full mb-3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
 
         <select
           name="role"
           onChange={handleChange}
           value={form.role}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.select}
         >
-          <option value="Student">Student</option>
-          <option value="Recruiter">Recruiter</option>
+          <option value="Student">I am a Student / Job Seeker</option>
+          <option value="Employer">I am an Employer / Recruiter</option> 
         </select>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-        >
+        <button type="submit" className={styles.button}>
           Sign Up
         </button>
 
-        {message && (
-          <p className="text-center mt-3 text-sm text-gray-600">{message}</p>
-        )}
+        {message && <p className={getMessageClass()}>{message}</p>}
+        
+        <p className={styles.loginLink}>
+          Already have an account?{" "}
+          <Link href="/auth/login">Sign in</Link>
+        </p>
       </form>
     </div>
   );

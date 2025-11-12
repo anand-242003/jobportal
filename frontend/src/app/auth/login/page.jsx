@@ -1,12 +1,16 @@
+// src/app/auth/login/page.jsx
 "use client";
 import { useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
+import styles from "./login.module.css"; 
+import Link from "next/link"; 
 
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,23 +19,31 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIsError(false); 
+      setMessage("Logging in..."); 
+      
       const res = await axiosInstance.post("/auth/login", form);
-      setMessage("Login successful");
-      setTimeout(() => router.push("/dashboard"), 1000); 
+      
+      setMessage("Login successful!"); 
+      setTimeout(() => router.push("/dashboard"), 1000);
+      
     } catch (err) {
-      setMessage(err.response?.data?.message || "Invalid credentials ");
+      setIsError(true);
+      setMessage(err.response?.data?.message || "Invalid credentials");
     }
   };
 
+  const getMessageClass = () => {
+    if (!message) return styles.message;
+    return isError
+      ? `${styles.message} ${styles.error}`
+      : `${styles.message} ${styles.success}`;
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-xl p-8 w-96 border border-gray-200"
-      >
-        <h1 className="text-2xl font-semibold text-center mb-6 text-blue-600">
-          Sign In
-        </h1>
+    <div className={styles.pageContainer}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h1 className={styles.title}>Sign In</h1>
 
         <input
           type="email"
@@ -39,7 +51,8 @@ export default function LoginPage() {
           placeholder="Email"
           onChange={handleChange}
           value={form.email}
-          className="w-full mb-3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
         <input
           type="password"
@@ -47,25 +60,23 @@ export default function LoginPage() {
           placeholder="Password"
           onChange={handleChange}
           value={form.password}
-          className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className={styles.input}
+          required
         />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-        >
+        <button type="submit" className={styles.button}>
           Sign In
         </button>
 
         {message && (
-          <p className="text-center mt-3 text-sm text-gray-600">{message}</p>
+          <p className={getMessageClass()}>
+            {message}
+          </p>
         )}
 
-        <p className="text-center text-sm mt-4">
+        <p className={styles.signupLink}>
           Don’t have an account?{" "}
-          <a href="/auth/signup" className="text-blue-600 hover:underline">
-            Sign up
-          </a>
+          <Link href="/auth/signup">Sign up</Link>
         </p>
       </form>
     </div>
