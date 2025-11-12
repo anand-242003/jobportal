@@ -1,3 +1,5 @@
+import styles from './jobs.module.css';
+
 export default function Page() {
   return (
     <div className={styles.jobs}>
