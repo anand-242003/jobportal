@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: [
-    "http://localhost:3000", // for local dev
+    "http://localhost:3000", 
     "https://jobportal-frontend-navy-xi.vercel.app", 
   ],
   credentials: true,
