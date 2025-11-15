@@ -20,6 +20,7 @@ model User {
   resume             String?
   resumeOriginalname String?
   profilePhoto       String?  @default("")
+  refreshToken       String?
 
   createdJobs Job[] @relation("CreatedJobs")
 

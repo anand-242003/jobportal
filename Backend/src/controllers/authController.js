@@ -1,6 +1,7 @@
 import { comparePassword, hashPassword } from "../utils/hash.js";
 import prisma from "../config/db.js";
 import { generateToken } from "../utils/generateToken.js";
+import { RefreshToken } from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
   try {
@@ -33,13 +34,23 @@ export const signup = async (req, res) => {
     });
 
     const token = generateToken(newUser);
+    const refreshToken = RefreshToken(newUser);
 
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production", 
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
+  
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 15 * 60 * 1000, 
+    });
+    
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       message: "User registered successfully",
       user: { id: newUser.id, fullName: newUser.fullName, email: newUser.email },
@@ -64,14 +75,22 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
     const token = generateToken(user);
+    const refreshToken = RefreshToken(user);
 
+  
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 15 * 60 * 1000, // 15 minutes
     });
-
+    
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
     res.json({ message: "Login successful", user: { id: user.id, fullName: user.fullName } });
   } catch (error) {
     console.error(error);
@@ -87,10 +106,41 @@ export const logout = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    res.json({ message: "Logout successful" });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.json({ message: "Logout successful" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+export const handleRefreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Access denied. No refresh token found." });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    
+    
+    const newAccessToken = generateToken(decoded);
+
+    res.cookie("token", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000, 
+    });
+    
+    res.json({ message: "Token refreshed successfully" });
+
+  } catch (error) {
+    console.error("Refresh token verification failed:", error);
+    return res.status(401).json({ message: "Access denied. Invalid refresh token." });
   }
 };
 
