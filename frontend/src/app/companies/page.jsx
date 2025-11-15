@@ -1,3 +1,4 @@
+"use client";
 import styles from './companies.module.css';
 
 export default function Page() {

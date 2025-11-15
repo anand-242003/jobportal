@@ -1,3 +1,5 @@
+"use client";
+
 import styles from './jobs.module.css';
 
 export default function Page() {

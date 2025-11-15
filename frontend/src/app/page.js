@@ -1,3 +1,4 @@
+
 export default function HomePage() {
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50">
