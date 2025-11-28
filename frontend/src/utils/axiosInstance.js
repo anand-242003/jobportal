@@ -21,14 +21,13 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes("/auth/refresh")) {
       originalRequest._retry = true;
 
       try {
         await axiosInstance.post("/auth/refresh");
 
         return axiosInstance(originalRequest);
-
       } catch (refreshError) {
         console.error("Refresh token failed:", refreshError);
 

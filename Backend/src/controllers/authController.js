@@ -2,6 +2,7 @@ import { comparePassword, hashPassword } from "../utils/hash.js";
 import prisma from "../config/db.js";
 import { generateToken } from "../utils/generateToken.js";
 import { RefreshToken } from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {

@@ -1,114 +1,121 @@
-
-
 .pageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 90vh;
-    background-color: #f9fafb;
-    padding: 2rem;
-  }
-  
-  .form {
-    background-color: white;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    border-radius: 0.75rem;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 26rem; /* 416px */
-    border: 1px solid #f0f0f0;
-  }
-  
-  .title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 2rem;
-    color: #111827;
-  }
-  
-  .input {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.875rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #98b8e9;
-    border-radius: 0.5rem;
-    outline: none;
-    transition: all 0.2s ease-in-out;
-    color:black;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e5e7ff, #f0f4ff);
+  padding: 2rem;
+}
 
-    
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: white; 
-  }
-  
-  
-  .select {
-    composes: input; 
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="%236B7280" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 1.25em 1.25em;
-  }
-  
-  .input:focus,
-  .select:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  }
-  
-  .button {
-    width: 100%;
-    background-color: #2563eb;
-    color: white;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.875rem 0;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.2s ease-out;
-  }
-  
-  .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-  }
-  
-  .message {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.875rem;
-  }
-  
-  .message.success {
-    color: #059669;
-  }
-  
-  .message.error {
-    color: #dc2626;
-  }
-  
-  .loginLink {
-    text-align: center;
-    font-size: 0.875rem;
-    margin-top: 1.5rem;
-    color: #4b5563;
-  }
-  
-  .loginLink a {
-    color: #2563eb;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  
-  .loginLink a:hover {
-    text-decoration: underline;
-    opacity: 0.8;
-  }
+.form {
+  width: 100%;
+  max-width: 460px;
+  background: #ffffff;
+  padding: 3.2rem 2.6rem;
+  border-radius: 26px;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #1f2f88;
+  text-align: center;
+  letter-spacing: -0.6px;
+  margin-bottom: 0.5rem;
+}
+
+.input,
+.select {
+  width: 100%;
+  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+}
+
+.input:hover,
+.select:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.input:focus,
+.select:focus {
+  background: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 5px rgba(99,102,241,0.18);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.select {
+  cursor: pointer;
+}
+
+.button {
+  padding: 1.05rem;
+  margin-top: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.27s ease;
+  letter-spacing: 0.45px;
+}
+
+.button:hover {
+  box-shadow: 0 12px 28px rgba(79,70,229,0.38);
+  transform: translateY(-3px);
+}
+
+.message {
+  font-size: 0.95rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.loginLink {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #475569;
+}
+
+.loginLink a {
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.loginLink a:hover {
+  color: #1f2f88;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,224 +1,137 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/navigation";
 import styles from "./dashboard.module.css";
+import { useUser } from "@/context/userContext";
 
 export default function DashboardPage() {
+  const { register, handleSubmit, setValue } = useForm();
   const router = useRouter();
 
-  const [profile, setProfile] = useState(null);
+  const { user: profile, setUser: setProfile, loading } = useUser();
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    profileBio: "",
-    skills: "",
-    phoneNumber: "",
-  });
+ 
+  const [msg, setMsg] = useState("");
+  const [err, setErr] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-
-  da
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        setLoading(true);
+    if (profile) {
+      setValue("fullName", profile.fullName || "");
+      setValue("profileBio", profile.profileBio || "");
+      setValue("skills", profile.skills.join(", ") || "");
+      setValue("phoneNumber", profile.phoneNumber || "");
+    }
+  }, [profile, setValue])
 
-        const res = await axiosInstance.get("/users/profile");
-        const data = res.data;
-
-        setProfile(data);
-
-        // Pre-fill the form with current data
-        setFormData({
-          fullName: data.fullName || "",
-          profileBio: data.profileBio || "",
-          skills: data.skills ? data.skills.join(", ") : "",
-          phoneNumber: data.phoneNumber || "",
-        });
-
-      } catch (error) {
-        console.log("Error loading profile:", error);
-
-        if (error.response?.status !== 401) {
-          setMessage("Failed to load profile.");
-          setIsError(true);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getProfile();
-  }, []);
-
-  // -----------------------------------------
-  // Update form data when user types
-  // -----------------------------------------
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  // -----------------------------------------
-  // Update profile when user submits form
-  // -----------------------------------------
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setMessage("Updating...");
-    setIsError(false);
+  const submit = async (data) => {
+    setMsg("Updating...");
+    setErr(false);
 
     try {
-      const skillsArray = formData.skills
+      const skillArr = data.skills
         .split(",")
-        .map((skill) => skill.trim())
-        .filter((skill) => skill !== "");
+        .map((s) => s.trim())
+        .filter(Boolean);
 
       const res = await axiosInstance.put("/users/profile", {
-        fullName: formData.fullName,
-        profileBio: formData.profileBio,
-        skills: skillsArray,
-        phoneNumber: formData.phoneNumber,
+        fullName: data.fullName,
+        profileBio: data.profileBio,
+        skills: skillArr,
+        phoneNumber: data.phoneNumber,
       });
 
-      setProfile(res.data.user);
-      setMessage(res.data.message);
 
-    } catch (error) {
-      console.log(error);
-      setMessage(error.response?.data?.message || "Update failed");
-      setIsError(true);
+      setProfile(res.data.user);
+      setMsg(res.data.message);
+    } catch (e) {
+      setMsg(e.response?.data?.message || "Failed to update.");
+      setErr(true);
     }
   };
 
-  // -----------------------------------------
-  // Logout function
-  // -----------------------------------------
-  const handleLogout = async () => {
+  const logout = async () => {
     try {
       await axiosInstance.post("/auth/logout");
+      setProfile(null)
       router.push("/auth/login");
-    } catch (error) {
-      console.log(error);
-      setMessage("Logout failed");
-      setIsError(true);
+    } catch {
+      setMsg("Failed to logout.");
+      setErr(true);
     }
   };
 
-  // -----------------------------------------
-  // Style the message
-  // -----------------------------------------
-  const getMessageClass = () => {
-    if (!message) return styles.message;
-    return isError
-      ? `${styles.message} ${styles.error}`
-      : `${styles.message} ${styles.success}`;
-  };
-
-  // -----------------------------------------
-  // RENDERING
-  // -----------------------------------------
-
   if (loading) {
-    return <div>Loading your dashboard...</div>;
+    return <div>Loading...</div>;
   }
 
   if (!profile) {
-    return <div>Could not load profile. Try logging in again.</div>;
+    return <div>You must be logged in to view this page.</div>;
   }
-
   return (
     <main className={styles.page}>
-      
-      {/* HEADER */}
       <div className={styles.header}>
-        <h1 className={styles.title}>
-          Welcome, {formData.fullName || profile.fullName}!
-        </h1>
-
-        <button onClick={handleLogout} className={styles.logoutButton}>
+        <h1 className={styles.title}>Welcome, {profile.fullName}</h1>
+        <button className={styles.logoutButton} onClick={logout}>
           Sign Out
         </button>
       </div>
 
-      <p>Update your professional profile below.</p>
-
-      {/* FORM */}
-      <form onSubmit={handleSubmit} className={styles.form}>
-        
-        {/* EMAIL (read only) */}
+      <form onSubmit={handleSubmit(submit)} className={styles.form}>
         <div className={styles.formGroup}>
           <label className={styles.label}>Email</label>
           <input
             type="email"
-            value={profile.email}
+            defaultValue={profile.email}
             readOnly
             className={styles.inputReadonly}
           />
         </div>
 
-        {/* FULL NAME */}
         <div className={styles.formGroup}>
           <label className={styles.label}>Full Name</label>
           <input
             type="text"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
+            {...register("fullName")}
             className={styles.input}
           />
         </div>
 
-        {/* PHONE NUMBER */}
         <div className={styles.formGroup}>
           <label className={styles.label}>Phone Number</label>
           <input
             type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
+            {...register("phoneNumber")}
             className={styles.input}
           />
         </div>
 
-        {/* PROFILE BIO */}
         <div className={styles.formGroup}>
           <label className={styles.label}>Profile Bio</label>
           <textarea
-            name="profileBio"
-            value={formData.profileBio}
-            onChange={handleChange}
+            {...register("profileBio")}
             className={styles.textarea}
-            placeholder="e.g., Full stack developer..."
-          ></textarea>
-        </div>
-
-        {/* SKILLS */}
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Skills (comma-separated)</label>
-          <input
-            type="text"
-            name="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder="React, Node.js, Prisma"
           />
         </div>
 
-        {/* SUBMIT BUTTON */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Skills</label>
+          <input
+            type="text"
+            {...register("skills")}
+            className={styles.input}
+          />
+        </div>
+
         <button type="submit" className={styles.submitButton}>
           Update Profile
         </button>
 
-        {/* MESSAGE */}
-        {message && <p className={getMessageClass()}>{message}</p>}
+        {msg && (
+          <p className={err ? styles.error : styles.success}>{msg}</p>
+        )}
       </form>
     </main>
   );

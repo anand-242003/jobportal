@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser"; 
 import authrouter from "./routes/authroutes.js";
 import userroutes from './routes/userroutes.js'
+import jobroutes from './routes/jobroutes.js'
+import applicationroutes from './routes/applicationroutes.js'
 dotenv.config();
 
 const app = express();
@@ -22,6 +24,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authrouter);
 app.use('/api/users',userroutes)
+app.use("/api/jobs", jobroutes);
+app.use("/api/applications", applicationroutes)
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is alive!" });
 });
