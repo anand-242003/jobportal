@@ -14,12 +14,12 @@ export function UserProvider({ children }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        
+
         const { data } = await axiosInstance.get("/users/profile");
-        setUser(data); 
-        
+        setUser(data);
+
       } catch (error) {
-      
+
         console.error("No logged in user found.");
       } finally {
         setLoading(false);
@@ -27,7 +27,7 @@ export function UserProvider({ children }) {
     };
 
     fetchUser();
-  }, []); 
+  }, []);
 
   const contextValue = {
     user,

@@ -4,7 +4,7 @@ import prisma from "../config/db.js";
 export const applyForJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    console.log("jobid",jobId)
+    console.log("jobid", jobId)
     const applicantId = req.user.id;
 
     const job = await prisma.job.findUnique({ where: { id: jobId } });
@@ -38,15 +38,11 @@ export const applyForJob = async (req, res) => {
   }
 };
 
-// @desc    Get applications for a specific job
-// @route   GET /api/applications/job/:jobId
-// @access  Private (Employer only - and owner of job)
 export const getJobApplications = async (req, res) => {
   try {
     const { jobId } = req.params;
     const employerId = req.user.id;
 
-    // 1. Verify the job belongs to this employer
     const job = await prisma.job.findUnique({
       where: { id: jobId }
     });
@@ -59,7 +55,6 @@ export const getJobApplications = async (req, res) => {
       return res.status(403).json({ message: "Not authorized to view these applications" });
     }
 
-    // 2. Fetch applications with applicant details
     const applications = await prisma.application.findMany({
       where: { jobId: jobId },
       include: {

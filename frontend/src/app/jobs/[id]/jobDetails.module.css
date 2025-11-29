@@ -1,0 +1,268 @@
+.page {
+    min-height: 100vh;
+    background: var(--bg-soft-white);
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.loading,
+.error {
+    padding: 4rem 2rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.error {
+    color: var(--danger);
+}
+
+.backLink {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+}
+
+.backLink:hover {
+    color: var(--danger);
+}
+
+.jobHeader {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.headerContent {
+    flex: 1;
+}
+
+.jobTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+}
+
+.companyInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.companyName {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.applyButton {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--danger));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: 'Poppins', sans-serif;
+}
+
+.applyButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.4);
+}
+
+.applyButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.jobMeta {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.metaItem svg {
+    stroke: var(--accent);
+    flex-shrink: 0;
+}
+
+.salaryBox {
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), rgba(var(--danger-rgb), 0.1));
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.salaryLabel {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.salaryAmount {
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--danger));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.message.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.3);
+}
+
+.message.error {
+    background: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(var(--danger-rgb), 0.3);
+}
+
+.section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.requirementsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.requirementItem {
+    padding: 0.875rem 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.requirementItem::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 0.75rem;
+}
+
+.loginPrompt {
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.1));
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.loginPrompt p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+}
+
+.loginButton {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--danger));
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.loginButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.4);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .jobHeader {
+        flex-direction: column;
+    }
+
+    .applyButton {
+        width: 100%;
+    }
+
+    .jobMeta {
+        gap: 1rem;
+    }
+
+    .metaItem {
+        flex-basis: 100%;
+    }
+
+    .jobTitle {
+        font-size: 1.5rem;
+    }
+}

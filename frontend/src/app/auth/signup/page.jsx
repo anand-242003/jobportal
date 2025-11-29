@@ -2,15 +2,15 @@
 import { useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
-import styles from "./signup.module.css"; 
-import Link from "next/link"; 
+import styles from "./signup.module.css";
+import Link from "next/link";
 
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
-    phoneNumber: "", 
+    phoneNumber: "",
     password: "",
     role: "Student",
   });
@@ -26,12 +26,12 @@ export default function SignupPage() {
     try {
       setIsError(false);
       setMessage("Creating account...");
-      
+
       const res = await axiosInstance.post("/auth/signup", form);
-      
+
       setMessage(res.data.message);
-      setTimeout(() => router.push("/auth/login"), 1500); 
-      
+      setTimeout(() => router.push("/auth/login"), 1500);
+
     } catch (err) {
       setIsError(true);
       setMessage(err.response?.data?.message || "Error signing up");
@@ -69,7 +69,7 @@ export default function SignupPage() {
           required
         />
         <input
-          type="tel" 
+          type="tel"
           name="phoneNumber"
           placeholder="Phone Number"
           onChange={handleChange}
@@ -94,7 +94,7 @@ export default function SignupPage() {
           className={styles.select}
         >
           <option value="Student">I am a Student / Job Seeker</option>
-          <option value="Employer">I am an Employer / Recruiter</option> 
+          <option value="Employer">I am an Employer / Recruiter</option>
         </select>
 
         <button type="submit" className={styles.button}>
@@ -102,7 +102,7 @@ export default function SignupPage() {
         </button>
 
         {message && <p className={getMessageClass()}>{message}</p>}
-        
+
         <p className={styles.loginLink}>
           Already have an account?{" "}
           <Link href="/auth/login">Sign in</Link>

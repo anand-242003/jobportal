@@ -20,8 +20,7 @@ export default function JobApplicantsPage() {
         setLoading(true);
         const { data } = await axiosInstance.get(`/applications/job/${id}`);
         setApplications(data);
-        
-        // Fetch job details to show title
+
         try {
           const jobResponse = await axiosInstance.get(`/jobs/${id}`);
           setJobTitle(jobResponse.data.title);
@@ -82,13 +81,12 @@ export default function JobApplicantsPage() {
                   {app.applicant.fullName}
                 </h3>
                 <span
-                  className={`${styles.status} ${
-                    app.status === "Accepted"
+                  className={`${styles.status} ${app.status === "Accepted"
                       ? styles.statusAccepted
                       : app.status === "Rejected"
-                      ? styles.statusRejected
-                      : styles.statusPending
-                  }`}
+                        ? styles.statusRejected
+                        : styles.statusPending
+                    }`}
                 >
                   {app.status}
                 </span>
@@ -167,4 +165,3 @@ export default function JobApplicantsPage() {
     </div>
   );
 }
-

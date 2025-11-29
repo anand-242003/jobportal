@@ -1,16 +1,15 @@
-// src/app/auth/login/page.jsx
 "use client";
 import { useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
-import styles from "./login.module.css"; 
-import Link from "next/link"; 
+import styles from "./login.module.css";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false); 
+  const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,14 +18,14 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsError(false); 
-      setMessage("Logging in..."); 
-      
+      setIsError(false);
+      setMessage("Logging in...");
+
       const res = await axiosInstance.post("/auth/login", form);
-      
-      setMessage("Login successful!"); 
+
+      setMessage("Login successful!");
       setTimeout(() => router.push("/dashboard"), 1000);
-      
+
     } catch (err) {
       setIsError(true);
       setMessage(err.response?.data?.message || "Invalid credentials");

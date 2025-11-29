@@ -9,11 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.4.0",
     "axios": "^1.13.1",
+    "framer-motion": "^12.23.24",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-hook-form": "^7.66.0"
+    "react-hook-form": "^7.66.0",
+    "three": "^0.181.2"
   },
   "devDependencies": {
     "babel-plugin-react-compiler": "1.0.0",

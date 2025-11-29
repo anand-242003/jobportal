@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        
+
         <Link href="/" className={styles.logoWrapper}>
           <div className={styles.logoIcon}>JP</div>
           <div className={styles.logoText}>
@@ -25,10 +25,11 @@ export default function Header() {
           <Link href="/jobs" className={styles.navLink}>
             Jobs
           </Link>
-          
-          
+          <Link href="/companies" className={styles.navLink}>
+            Companies
+          </Link>
+
           {loading ? null : (
-            
             user ? (
               <>
                 {user.role === "Employer" && (
@@ -36,26 +37,22 @@ export default function Header() {
                     Post a Job
                   </Link>
                 )}
-                
+
                 <Link href="/dashboard" className={styles.navLink}>
                   Dashboard
                 </Link>
-                
-                <span className={styles.navLink} style={{ color: "#1d4ed8" }}>
+
+                <span className={styles.welcome}>
                   Welcome, {user.fullName}!
                 </span>
               </>
             ) : (
-            
               <>
-                <Link href="/companies" className={styles.navLink}>
-                  Companies
-                </Link>
                 <Link href="/auth/login" className={styles.navLink}>
-                  Sign in
+                  Sign In
                 </Link>
                 <Link href="/auth/signup" className={styles.navButton}>
-                  Sign up
+                  Sign Up
                 </Link>
               </>
             )

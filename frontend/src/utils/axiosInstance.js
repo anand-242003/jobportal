@@ -13,25 +13,39 @@ const axiosInstance = axios.create({
   withCredentials: true
 });
 
+let isRefreshing = false;
+
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response; 
+    return response;
   },
 
   async (error) => {
     const originalRequest = error.config;
 
+    if (!error.response) {
+      console.error("Network error - cannot reach backend");
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes("/auth/refresh")) {
+
+      if (isRefreshing) {
+        return Promise.reject(error);
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         await axiosInstance.post("/auth/refresh");
-
+        isRefreshing = false;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh token failed:", refreshError);
+        isRefreshing = false;
+        console.error("Refresh token failed. Redirecting to login...");
 
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && !window.location.pathname.includes("/auth/login")) {
           window.location.href = "/auth/login";
         }
 

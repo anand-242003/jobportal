@@ -1,102 +1,145 @@
 .header {
-  width: 100%;
-  background: #ffffffcc;
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-soft);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
+  border-bottom: 2px solid var(--bg-light-blue);
 }
 
 .container {
-  max-width: 1250px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 1rem 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
-/* LOGO WRAPPER */
 .logoWrapper {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.75rem;
   text-decoration: none;
-  color: inherit;
-  transition: opacity .25s ease;
+  transition: var(--transition);
 }
 
 .logoWrapper:hover {
-  opacity: 0.85;
+  transform: translateY(-2px);
 }
 
 .logoIcon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.25rem;
   color: white;
-  box-shadow: 0 6px 14px rgba(99,102,241,0.35);
 }
 
 .logoText h2 {
-  font-size: 1.55rem;
-  font-weight: 800;
-  color: #1e3a8a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
-  letter-spacing: -0.5px;
 }
 
 .brandSpan {
-  color: #6366f1;
+  color: var(--accent);
 }
 
 .logoText p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
   margin: 0;
-  margin-top: -2px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: #475569;
 }
 
-/* NAVIGATION */
 .nav {
   display: flex;
   align-items: center;
-  gap: 1.8rem;
+  gap: 1.5rem;
 }
 
 .navLink {
-  font-size: 1rem;
-  color: #475569;
-  text-decoration: none;
+  color: var(--text-secondary);
   font-weight: 500;
-  transition: color .25s ease, transform .2s ease;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease;
 }
 
 .navLink:hover {
-  color: #1e3a8a;
-  transform: translateY(-2px);
+  color: var(--accent);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.welcome {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-light-blue);
+  border-radius: var(--radius-sm);
 }
 
 .navButton {
-  padding: 0.55rem 1.2rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--danger));
   color: white;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
-  border-radius: 12px;
-  text-decoration: none;
-  transition: all .25s ease;
+  font-weight: 600;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
 }
 
 .navButton:hover {
-  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.38);
-  transform: translateY(-2.5px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.4);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .nav {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .navLink,
+  .welcome {
+    font-size: 0.85rem;
+  }
+
+  .logoText h2 {
+    font-size: 1.25rem;
+  }
+
+  .logoIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
 }
