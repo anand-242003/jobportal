@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -9,8 +10,17 @@ export default function Footer() {
                 <div className={styles.grid}>
                     <div className={styles.column}>
                         <div className={styles.logo}>
-                            <div className={styles.logoIcon}>JP</div>
-                            <h3>JobPortal</h3>
+                            <div className={styles.logoContainer}>
+                                <Image
+                                    src="/job.png"
+                                    alt="JobPortal Logo"
+                                    width={55}
+                                    height={55}
+                                    className={styles.logoImage}
+                                    priority
+                                    unoptimized
+                                />
+                            </div>
                         </div>
                         <p className={styles.description}>
                             Find your next step. Connecting talented individuals with amazing opportunities.

@@ -1,20 +1,49 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
 import styles from "./Header.module.css";
 import { useUser } from "../src/context/userContext";
+import { useTheme } from "../src/context/themeContext";
+import axiosInstance from "../src/utils/axiosInstance";
 
 export default function Header() {
-  const { user, loading } = useUser();
+  const { user, loading, setUser } = useUser();
+  const { theme, toggleTheme } = useTheme();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+
+    setLoggingOut(true);
+    try {
+      await axiosInstance.post("/auth/logout");
+      setUser(null);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
 
         <Link href="/" className={styles.logoWrapper}>
-          <div className={styles.logoIcon}>JP</div>
+          <div className={styles.logoContainer}>
+            <Image
+              src="/job.png"
+              alt="JobPortal Logo"
+              width={65}
+              height={65}
+              className={styles.logoImage}
+              priority
+              unoptimized
+            />
+          </div>
           <div className={styles.logoText}>
-            <h2>Job<span className={styles.brandSpan}>Portal</span></h2>
-            <p>Find your next step</p>
+            <p className={styles.tagline}>Find your next step</p>
           </div>
         </Link>
 
@@ -38,13 +67,35 @@ export default function Header() {
                   </Link>
                 )}
 
-                <Link href="/dashboard" className={styles.navLink}>
+                <Link href={user.role === "Employer" ? "/dashboard/employer" : "/dashboard"} className={styles.navLink}>
                   Dashboard
                 </Link>
 
-                <span className={styles.welcome}>
-                  Welcome, {user.fullName}!
-                </span>
+                <div className={styles.userProfile}>
+                  <Image
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random&color=fff&size=128`}
+                    alt={user.fullName}
+                    width={32}
+                    height={32}
+                    className={styles.avatar}
+                    unoptimized
+                  />
+                  <span className={styles.welcome}>
+                    {user.fullName}
+                  </span>
+                </div>
+
+                <button onClick={toggleTheme} className={styles.themeToggle} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
+                  {theme === 'light' ? '🌙' : '☀️'}
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  className={styles.logoutButton}
+                  disabled={loggingOut}
+                >
+                  {loggingOut ? "Logging out..." : "Sign Out"}
+                </button>
               </>
             ) : (
               <>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import axiosInstance from "@/utils/axiosInstance";
@@ -50,6 +50,12 @@ export default function PostJobPage() {
     }
   };
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, loading, router]);
+
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -60,7 +66,6 @@ export default function PostJobPage() {
   }
 
   if (!user) {
-    router.push("/auth/login");
     return null;
   }
 

@@ -36,6 +36,35 @@
     --transition: all 0.3s ease;
 }
 
+/* Dark Mode Theme */
+[data-theme="dark"] {
+    /* Primary Colors - Adjusted for dark mode */
+    --primary: #6BB6FF;
+    --secondary: #FFE66D;
+    --accent: #FF8C42;
+    --danger: #FF6B6B;
+
+    /* RGB Values */
+    --primary-rgb: 107, 182, 255;
+    --secondary-rgb: 255, 230, 109;
+    --accent-rgb: 255, 140, 66;
+    --danger-rgb: 255, 107, 107;
+
+    /* Dark Backgrounds */
+    --bg-light-blue: rgba(107, 182, 255, 0.1);
+    --bg-soft-white: #0f172a;
+    --bg-card: #1e293b;
+
+    /* Dark Text Colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    /* Dark Shadows */
+    --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;

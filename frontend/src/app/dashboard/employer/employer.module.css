@@ -30,19 +30,23 @@
 }
 
 .postButton {
-  background: linear-gradient(135deg, var(--accent), var(--danger));
+  background: rgba(var(--accent-rgb), 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
   padding: 0.85rem 1.75rem;
   border-radius: var(--radius-sm);
   font-weight: 600;
   text-decoration: none;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .postButton:hover {
+  background: rgba(var(--primary-rgb), 0.9);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.4);
 }
 
 /* Stats Grid */
@@ -196,7 +200,9 @@
 
 .viewButton {
   flex: 1;
-  background: linear-gradient(135deg, var(--accent), var(--danger));
+  background: rgba(var(--accent-rgb), 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-sm);
@@ -204,12 +210,14 @@
   text-decoration: none;
   text-align: center;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .viewButton:hover {
+  background: rgba(var(--primary-rgb), 0.9);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.4);
 }
 
 .viewJobButton {

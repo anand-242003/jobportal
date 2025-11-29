@@ -49,7 +49,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchApplicationStats = async () => {
-      if (!profile || profile.role === "Employer") return;
+      if (!profile || profile.role === "Employer" || loading) return;
 
       try {
         const res = await axiosInstance.get("/applications/my-applications");
@@ -59,11 +59,14 @@ export default function DashboardPage() {
         }));
       } catch (error) {
         console.error("Failed to fetch applications:", error);
+        if (error.response?.status === 401) {
+          console.log("User not authenticated yet");
+        }
       }
     };
 
     fetchApplicationStats();
-  }, [profile]);
+  }, [profile, loading]);
 
   const submit = async (data) => {
     setMsg("Updating...");
@@ -145,9 +148,6 @@ export default function DashboardPage() {
           </h1>
           <p className={styles.welcomeSubtitle}>Here's your dashboard overview</p>
         </div>
-        <button className={styles.logoutButton} onClick={logout}>
-          Sign Out
-        </button>
       </div>
 
       <div className={styles.statsGrid}>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
         <div className={styles.profileCard}>
           <div className={styles.avatarSection}>
             <img
-              src={profile.profilePhoto || "https://via.placeholder.com/150"}
+              src={profile.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName)}&background=random&color=fff&size=200`}
               alt="Profile"
               className={styles.avatar}
             />

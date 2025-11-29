@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/context/userContext";
 import styles from "./employer.module.css";
 
 export default function EmployerDashboard() {
   const { user, loading } = useUser();
+  const router = useRouter();
   const [jobs, setJobs] = useState([]);
   const [stats, setStats] = useState({
     totalJobs: 0,
@@ -15,6 +17,12 @@ export default function EmployerDashboard() {
     recentApplications: [],
   });
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/login");
+    }
+  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchData = async () => {

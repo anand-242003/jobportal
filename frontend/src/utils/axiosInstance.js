@@ -3,7 +3,7 @@ import axios from "axios";
 let baseURL = "";
 
 if (process.env.NODE_ENV !== "production") {
-  baseURL = "http://localhost:5001/api";
+  baseURL = "/api"; // Use relative path to leverage Next.js proxy
 } else {
   baseURL = "https://jobportal-oc40.onrender.com/api";
 }
@@ -43,9 +43,14 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         isRefreshing = false;
-        console.error("Refresh token failed. Redirecting to login...");
 
-        if (typeof window !== "undefined" && !window.location.pathname.includes("/auth/login")) {
+        const publicPages = ["/", "/jobs", "/companies", "/auth/login", "/auth/signup"];
+        const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+
+        if (typeof window !== "undefined" &&
+          !publicPages.includes(currentPath) &&
+          !currentPath.startsWith("/jobs/") &&
+          !currentPath.includes("/auth/")) {
           window.location.href = "/auth/login";
         }
 

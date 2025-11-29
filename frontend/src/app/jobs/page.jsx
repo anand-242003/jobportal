@@ -38,7 +38,7 @@ export default function JobsPage() {
     try {
       const params = {
         page,
-        limit: 12,
+        limit: 9,
         search: debouncedSearch,
         sort,
         ...filters,

@@ -10,7 +10,7 @@ export default function HomePage() {
     const [featuredJobs, setFeaturedJobs] = useState([]);
 
     useEffect(() => {
-        // Fetch real job data for carousel
+
         const fetchJobs = async () => {
             try {
                 const res = await axiosInstance.get("/jobs?limit=6");
@@ -24,7 +24,7 @@ export default function HomePage() {
 
     return (
         <main className={styles.container}>
-            {/* Hero Section */}
+
             <section className={styles.hero}>
                 <motion.div
                     className={styles.heroContent}
@@ -39,7 +39,7 @@ export default function HomePage() {
                         Discover opportunities that match your skills and passion
                     </p>
 
-                    {/* Search Bar */}
+
                     <div className={styles.searchContainer}>
                         <div className={styles.searchBar}>
                             <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -58,7 +58,7 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    {/* Stats */}
+
                     <div className={styles.statsGrid}>
                         <motion.div
                             className={styles.statCard}
@@ -86,7 +86,7 @@ export default function HomePage() {
                         </motion.div>
                     </div>
 
-                    {/* CTA Buttons */}
+
                     <div className={styles.ctaGroup}>
                         <Link href="/jobs" className={styles.ctaPrimary}>
                             Explore Jobs →
@@ -98,42 +98,44 @@ export default function HomePage() {
                 </motion.div>
             </section>
 
-            {/* Featured Jobs Carousel */}
+
             {featuredJobs.length > 0 && (
                 <section className={styles.featuredSection}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.highlight}>Featured</span> Opportunities
                     </h2>
-                    <div className={styles.jobsCarousel}>
-                        {featuredJobs.map((job, index) => (
-                            <motion.div
-                                key={job.id}
-                                className={styles.jobCard}
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1, duration: 0.5 }}
-                                whileHover={{ y: -10, scale: 1.02 }}
-                            >
-                                <div className={styles.jobHeader}>
-                                    <h3 className={styles.jobTitle}>{job.title}</h3>
-                                    <span className={styles.jobBadge}>{job.jobType}</span>
-                                </div>
-                                <p className={styles.jobLocation}>{job.location}</p>
-                                <p className={styles.jobDescription}>
-                                    {job.description?.slice(0, 100)}...
-                                </p>
-                                <div className={styles.jobFooter}>
-                                    <span className={styles.jobSalary}>
-                                        ₹{job.salary?.toLocaleString() || 'Competitive'}
-                                    </span>
-                                    <Link href={`/jobs/${job.id}`} className={styles.applyBtn}>
-                                        View Details
-                                    </Link>
-                                </div>
-                            </motion.div>
-                        ))}
+
+                    <div className={styles.carouselWrapper}>
+                        <div className={styles.carouselTrack}>
+
+                            {[...featuredJobs, ...featuredJobs].map((job, index) => (
+                                <motion.div
+                                    key={`${job.id}-${index}`}
+                                    className={styles.jobCard}
+                                    whileHover={{ y: -10, scale: 1.05 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <div className={styles.jobHeader}>
+                                        <h3 className={styles.jobTitle}>{job.title}</h3>
+                                        <span className={styles.jobBadge}>{job.jobType}</span>
+                                    </div>
+                                    <p className={styles.jobLocation}>📍 {job.location}</p>
+                                    <p className={styles.jobDescription}>
+                                        {job.description?.slice(0, 100)}...
+                                    </p>
+                                    <div className={styles.jobFooter}>
+                                        <span className={styles.jobSalary}>
+                                            {job.salary || 'Competitive'}
+                                        </span>
+                                        <Link href={`/jobs/${job.id}`} className={styles.applyBtn}>
+                                            View Details →
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
+
                     <div className={styles.viewAllContainer}>
                         <Link href="/jobs" className={styles.viewAllBtn}>
                             View All Jobs →
@@ -141,6 +143,157 @@ export default function HomePage() {
                     </div>
                 </section>
             )}
+
+
+            <section className={styles.testimonialsSection}>
+                <h2 className={styles.sectionTitle}>
+                    <span className={styles.highlight}>Trusted</span> By Thousands
+                </h2>
+                <p className={styles.sectionSubtitle}>
+                    See what our users say about their job search experience
+                </p>
+
+                <div className={styles.carouselWrapper}>
+                    <div className={styles.testimonialsTrack}>
+                        {[
+                            {
+                                id: 1,
+                                name: "Priya Sharma",
+                                role: "Software Engineer",
+                                company: "Tech Corp",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=1",
+                                text: "Found my dream job within 2 weeks! The platform is incredibly easy to use and the job recommendations were spot on."
+                            },
+                            {
+                                id: 2,
+                                name: "Rahul Verma",
+                                role: "Product Manager",
+                                company: "StartupXYZ",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=12",
+                                text: "Amazing experience! Got multiple interview calls and landed a role that perfectly matches my skills. Highly recommended!"
+                            },
+                            {
+                                id: 3,
+                                name: "Ananya Patel",
+                                role: "UI/UX Designer",
+                                company: "Creative Studios",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=5",
+                                text: "The best job portal I've used. Professional, responsive, and helped me transition to my ideal role seamlessly."
+                            },
+                            {
+                                id: 4,
+                                name: "Arjun Singh",
+                                role: "Data Scientist",
+                                company: "AI Labs",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=13",
+                                text: "Outstanding platform! The quality of job listings is top-notch and the application process is smooth and efficient."
+                            },
+                            {
+                                id: 5,
+                                name: "Sneha Reddy",
+                                role: "Marketing Manager",
+                                company: "Brand Co",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=9",
+                                text: "Love how easy it is to apply for jobs and track applications. Got my current role through this platform!"
+                            },
+                            {
+                                id: 6,
+                                name: "Vikram Shah",
+                                role: "Full Stack Developer",
+                                company: "Web Solutions",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=15",
+                                text: "Excellent job portal with great opportunities. The interface is clean and finding relevant jobs is a breeze."
+                            }
+                        ].concat([
+                            {
+                                id: 7,
+                                name: "Priya Sharma",
+                                role: "Software Engineer",
+                                company: "Tech Corp",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=1",
+                                text: "Found my dream job within 2 weeks! The platform is incredibly easy to use and the job recommendations were spot on."
+                            },
+                            {
+                                id: 8,
+                                name: "Rahul Verma",
+                                role: "Product Manager",
+                                company: "StartupXYZ",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=12",
+                                text: "Amazing experience! Got multiple interview calls and landed a role that perfectly matches my skills. Highly recommended!"
+                            },
+                            {
+                                id: 9,
+                                name: "Ananya Patel",
+                                role: "UI/UX Designer",
+                                company: "Creative Studios",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=5",
+                                text: "The best job portal I've used. Professional, responsive, and helped me transition to my ideal role seamlessly."
+                            },
+                            {
+                                id: 10,
+                                name: "Arjun Singh",
+                                role: "Data Scientist",
+                                company: "AI Labs",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=13",
+                                text: "Outstanding platform! The quality of job listings is top-notch and the application process is smooth and efficient."
+                            },
+                            {
+                                id: 11,
+                                name: "Sneha Reddy",
+                                role: "Marketing Manager",
+                                company: "Brand Co",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=9",
+                                text: "Love how easy it is to apply for jobs and track applications. Got my current role through this platform!"
+                            },
+                            {
+                                id: 12,
+                                name: "Vikram Shah",
+                                role: "Full Stack Developer",
+                                company: "Web Solutions",
+                                rating: 5,
+                                image: "https://i.pravatar.cc/150?img=15",
+                                text: "Excellent job portal with great opportunities. The interface is clean and finding relevant jobs is a breeze."
+                            }
+                        ]).map((testimonial) => (
+                            <motion.div
+                                key={testimonial.id}
+                                className={styles.testimonialCard}
+                                whileHover={{ y: -5, scale: 1.03 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className={styles.testimonialHeader}>
+                                    <img
+                                        src={testimonial.image}
+                                        alt={testimonial.name}
+                                        className={styles.testimonialAvatar}
+                                    />
+                                    <div className={styles.testimonialInfo}>
+                                        <h4 className={styles.testimonialName}>{testimonial.name}</h4>
+                                        <p className={styles.testimonialRole}>{testimonial.role} at {testimonial.company}</p>
+                                    </div>
+                                </div>
+                                <div className={styles.testimonialRating}>
+                                    {[...Array(testimonial.rating)].map((_, i) => (
+                                        <span key={i} className={styles.star}>⭐</span>
+                                    ))}
+                                </div>
+                                <p className={styles.testimonialText}>"{testimonial.text}"</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }

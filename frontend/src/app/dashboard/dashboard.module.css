@@ -212,7 +212,9 @@
 
 .uploadPhotoBtn {
   padding: 0.65rem 1.25rem;
-  background: linear-gradient(135deg, var(--accent), var(--danger));
+  background: rgba(var(--accent-rgb), 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -220,13 +222,15 @@
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .uploadPhotoBtn:hover {
+  background: rgba(var(--primary-rgb), 0.9);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.4);
 }
 
 /* Profile Info Display */
@@ -270,23 +274,27 @@
 
 .uploadResumeBtn {
   padding: 0.65rem 1.25rem;
-  background: linear-gradient(135deg, var(--secondary), var(--accent));
-  color: var(--text-primary);
+  background: rgba(var(--accent-rgb), 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.95rem;
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--secondary-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
   text-align: center;
   margin-top: 1rem;
   display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .uploadResumeBtn:hover {
+  background: rgba(var(--primary-rgb), 0.9);
+  box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4);
 }
 
 /* Edit Form */
@@ -343,22 +351,25 @@
 
 .submitButton {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, var(--accent), var(--danger));
+  background: rgba(var(--accent-rgb), 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-sm);
   font-size: 1.1rem;
   font-weight: 600;
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
   align-self: flex-start;
 }
 
 .submitButton:hover {
+  background: rgba(var(--primary-rgb), 0.9);
+  box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(var(--danger-rgb), 0.4);
 }
 
 .success {

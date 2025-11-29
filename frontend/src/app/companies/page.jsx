@@ -23,13 +23,27 @@ export default function CompaniesPage() {
             const companyMap = new Map();
 
             jobs.forEach(job => {
-                const employerName = job.created_by?.fullName || "Unknown Company";
                 const employerId = job.created_by?.id || `unknown-${Date.now()}-${Math.random()}`;
+
+                const companyNames = [
+                    "TechCorp Solutions", "Innovate Labs", "Digital Dynamics", "CloudWorks Inc",
+                    "DataStream Technologies", "AI Innovations", "CyberSafe Systems", "WebCraft Studios",
+                    "CodeMasters Ltd", "FutureTech Enterprises", "SmartSolutions Group", "NextGen Software",
+                    "Quantum Computing Co", "ByteForce Technologies", "DevHub Solutions", "AppGenius Inc"
+                ];
+
+                let companyName;
+                if (!companyMap.has(employerId)) {
+                    const index = companyMap.size % companyNames.length;
+                    companyName = companyNames[index];
+                } else {
+                    companyName = companyMap.get(employerId).name;
+                }
 
                 if (!companyMap.has(employerId)) {
                     companyMap.set(employerId, {
                         id: employerId,
-                        name: employerName,
+                        name: companyName,
                         jobs: [],
                         totalJobs: 0,
                         locations: new Set(),

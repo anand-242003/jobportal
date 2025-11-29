@@ -20,7 +20,6 @@ export function UserProvider({ children }) {
 
       } catch (error) {
 
-        console.error("No logged in user found.");
       } finally {
         setLoading(false);
       }
