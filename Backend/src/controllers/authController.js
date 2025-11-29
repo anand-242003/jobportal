@@ -45,16 +45,18 @@ export const signup = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     res.status(201).json({
@@ -91,17 +93,22 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
+
+    console.log("Login cookies set for user:", user.email);
+
     res.json({ message: "Login successful", user: { id: user.id, fullName: user.fullName } });
   } catch (error) {
     console.error(error);
@@ -138,10 +145,11 @@ export const logout = async (req, res) => {
 };
 
 export const handleRefreshToken = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-
   console.log("Handle Refresh Token Called");
   console.log("Cookies received:", req.cookies);
+  console.log("Headers:", req.headers.cookie);
+
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     console.log("No refresh token in cookies");
@@ -183,24 +191,25 @@ export const handleRefreshToken = async (req, res) => {
 
     res.cookie("token", newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false,
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
+    console.log("Tokens refreshed successfully");
     res.json({ message: "Token refreshed successfully" });
 
   } catch (error) {
-    console.error("Refresh token verification failed:", error.message);
-    res.clearCookie("token");
-    res.clearCookie("refreshToken");
-    return res.status(403).json({ message: "Invalid refresh token. Please login again." });
+    console.error("Refresh token error:", error.message);
+    res.status(403).json({ message: "Invalid or expired refresh token" });
   }
 };

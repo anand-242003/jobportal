@@ -80,3 +80,39 @@ export const getJobApplications = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getMyApplications = async (req, res) => {
+  try {
+    const applicantId = req.user.id;
+
+    const applications = await prisma.application.findMany({
+      where: { applicantId: applicantId },
+      include: {
+        job: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            location: true,
+            salary: true,
+            jobType: true,
+            experienceLevel: true,
+            createdAt: true,
+            created_by: {
+              select: {
+                fullName: true,
+                email: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

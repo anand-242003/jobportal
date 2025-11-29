@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 
 async function clearAndSeedJobs() {
     try {
-        console.log('🗑️  Clearing existing jobs...');
+        console.log('Clearing existing jobs...');
 
         await prisma.application.deleteMany({});
-        console.log(' Cleared applications');
+        console.log('Cleared applications');
 
         await prisma.job.deleteMany({});
         console.log('Cleared jobs');
@@ -86,7 +86,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Data & Analytics
+
             {
                 title: "Data Analyst",
                 description: "Analyze business data to drive decision-making. You'll create dashboards, conduct A/B tests, and work with stakeholders to identify growth opportunities.",
@@ -110,7 +110,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Design
+
             {
                 title: "UI/UX Designer",
                 description: "Design intuitive and beautiful user interfaces for web and mobile applications. You'll conduct user research, create wireframes, and collaborate with development teams.",
@@ -134,7 +134,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Product & Management
+
             {
                 title: "Product Manager",
                 description: "Drive product strategy and roadmap for our core products. You'll work with engineering, design, and business teams to build products users love.",
@@ -158,7 +158,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Marketing & Sales
+
             {
                 title: "Digital Marketing Manager",
                 description: "Lead our digital marketing efforts including SEO, SEM, social media, and content marketing. You'll drive growth and brand awareness across digital channels.",
@@ -193,7 +193,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Operations & HR
+
             {
                 title: "HR Manager",
                 description: "Oversee all aspects of human resources including recruitment, onboarding, performance management, and employee relations. You'll build a positive workplace culture.",
@@ -217,7 +217,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Finance
+
             {
                 title: "Financial Analyst",
                 description: "Analyze financial data, create forecasts, and provide insights to support business decisions. You'll work with senior management on budgeting and planning.",
@@ -241,7 +241,7 @@ async function clearAndSeedJobs() {
                 created_by: { connect: { id: employer.id } }
             },
 
-            // Internships
+
             {
                 title: "Software Engineering Intern",
                 description: "6-month internship opportunity to work on real projects with our engineering team. You'll learn modern web development practices and work with experienced mentors.",
@@ -264,13 +264,234 @@ async function clearAndSeedJobs() {
                 position: 3,
                 created_by: { connect: { id: employer.id } }
             },
+            {
+                title: "Backend Developer (Node.js)",
+                description: "Build scalable backend services and REST APIs using Node.js and Express. Work closely with the frontend team to deliver end-to-end features.",
+                requirements: ["Node.js", "Express", "MongoDB", "REST APIs", "Git"],
+                salary: "₹10,00,000 - ₹18,00,000 per year",
+                location: "Chennai",
+                jobType: "Full-time",
+                experienceLevel: 3,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Cloud Engineer",
+                description: "Deploy, monitor, and optimize cloud infrastructure across AWS and Azure. Manage autoscaling, security groups, and cost optimization.",
+                requirements: ["AWS", "Azure", "Linux", "Cloud Networking", "Terraform"],
+                salary: "₹12,00,000 - ₹22,00,000 per year",
+                location: "Bangalore",
+                jobType: "Full-time",
+                experienceLevel: 3,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Cybersecurity Engineer",
+                description: "Monitor and protect enterprise systems from cyber threats. Conduct penetration testing, risk assessment, and security audits.",
+                requirements: ["Security", "Firewalls", "Penetration Testing", "Linux", "SIEM"],
+                salary: "₹15,00,000 - ₹28,00,000 per year",
+                location: "Delhi",
+                jobType: "Full-time",
+                experienceLevel: 4,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Blockchain Developer",
+                description: "Develop smart contracts and decentralized applications using Ethereum and Solidity. Improve blockchain infrastructure and scalability.",
+                requirements: ["Solidity", "Ethereum", "Smart Contracts", "Web3.js", "Cryptography"],
+                salary: "₹18,00,000 - ₹32,00,000 per year",
+                location: "Remote",
+                jobType: "Full-time",
+                experienceLevel: 4,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Game Developer",
+                description: "Create 2D and 3D games using Unity. Work with designers and artists to bring immersive game experiences to life.",
+                requirements: ["Unity", "C#", "Game Physics", "3D Modeling", "Animation"],
+                salary: "₹8,00,000 - ₹16,00,000 per year",
+                location: "Hyderabad",
+                jobType: "Full-time",
+                experienceLevel: 2,
+                position: 3,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "System Administrator",
+                description: "Manage enterprise servers, backups, monitoring systems, and automate administrative tasks.",
+                requirements: ["Linux", "Windows Server", "Networking", "Shell Scripting", "Monitoring Tools"],
+                salary: "₹6,00,000 - ₹12,00,000 per year",
+                location: "Pune",
+                jobType: "Full-time",
+                experienceLevel: 3,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Technical Support Engineer",
+                description: "Provide support for software products, troubleshoot issues, and interact with clients for resolutions.",
+                requirements: ["Troubleshooting", "Networking", "Customer Support", "Linux", "Ticketing Systems"],
+                salary: "₹4,00,000 - ₹7,00,000 per year",
+                location: "Gurgaon",
+                jobType: "Full-time",
+                experienceLevel: 1,
+                position: 4,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "QA Engineer",
+                description: "Perform manual and automated testing for web and mobile applications. Ensure high-quality product releases.",
+                requirements: ["Selenium", "Manual Testing", "Automation", "Jira", "API Testing"],
+                salary: "₹6,00,000 - ₹12,00,000 per year",
+                location: "Bangalore",
+                jobType: "Full-time",
+                experienceLevel: 2,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Automation Tester",
+                description: "Develop and maintain automated test scripts for frontend and backend applications.",
+                requirements: ["Selenium", "Python", "TestNG", "Postman", "CI/CD"],
+                salary: "₹8,00,000 - ₹14,00,000 per year",
+                location: "Chennai",
+                jobType: "Full-time",
+                experienceLevel: 3,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "IT Support Executive",
+                description: "Resolve technical issues, install software, and maintain IT assets across the organization.",
+                requirements: ["Hardware Support", "Windows", "Networking", "Troubleshooting", "ITIL"],
+                salary: "₹3,50,000 - ₹6,00,000 per year",
+                location: "Mumbai",
+                jobType: "Full-time",
+                experienceLevel: 1,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Research Analyst",
+                description: "Conduct market research, gather insights, analyze competition, and prepare detailed reports.",
+                requirements: ["Research", "Excel", "PowerPoint", "Data Analysis", "Communication"],
+                salary: "₹5,00,000 - ₹9,00,000 per year",
+                location: "Delhi",
+                jobType: "Full-time",
+                experienceLevel: 1,
+                position: 3,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Supply Chain Manager",
+                description: "Optimize logistics, vendor management, procurement, and inventory operations.",
+                requirements: ["Supply Chain", "Logistics", "Vendor Management", "Forecasting", "SAP"],
+                salary: "₹10,00,000 - ₹18,00,000 per year",
+                location: "Pune",
+                jobType: "Full-time",
+                experienceLevel: 5,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Business Analyst",
+                description: "Bridge the gap between technical and business teams. Collect requirements and propose effective solutions.",
+                requirements: ["Business Analysis", "SQL", "Documentation", "Communication", "Agile"],
+                salary: "₹7,00,000 - ₹14,00,000 per year",
+                location: "Bangalore",
+                jobType: "Full-time",
+                experienceLevel: 3,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Scrum Master",
+                description: "Lead agile ceremonies, remove blockers, and ensure smooth delivery of sprints.",
+                requirements: ["Scrum", "Agile", "Jira", "Leadership", "Communication"],
+                salary: "₹12,00,000 - ₹20,00,000 per year",
+                location: "Hyderabad",
+                jobType: "Full-time",
+                experienceLevel: 4,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Database Administrator",
+                description: "Manage MySQL and MongoDB databases, ensure performance, backups, and security.",
+                requirements: ["MySQL", "MongoDB", "Backup", "Optimization", "Linux"],
+                salary: "₹10,00,000 - ₹18,00,000 per year",
+                location: "Chennai",
+                jobType: "Full-time",
+                experienceLevel: 4,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Network Engineer",
+                description: "Manage routers, switches, firewalls, and enterprise network configurations.",
+                requirements: ["Networking", "Cisco", "LAN/WAN", "Firewall", "VPN"],
+                salary: "₹6,00,000 - ₹12,00,000 per year",
+                location: "Mumbai",
+                jobType: "Full-time",
+                experienceLevel: 2,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Social Media Manager",
+                description: "Manage social media campaigns, strategy, branding, and analytics across all platforms.",
+                requirements: ["Social Media", "Branding", "Content Strategy", "Analytics", "Communication"],
+                salary: "₹6,00,000 - ₹12,00,000 per year",
+                location: "Remote",
+                jobType: "Full-time",
+                experienceLevel: 2,
+                position: 1,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Copywriter",
+                description: "Write compelling ad copy, website content, and marketing materials for various campaigns.",
+                requirements: ["Copywriting", "Creative Writing", "SEO", "Grammar", "Storytelling"],
+                salary: "₹4,00,000 - ₹7,00,000 per year",
+                location: "Delhi",
+                jobType: "Full-time",
+                experienceLevel: 1,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Video Editor",
+                description: "Edit videos for marketing campaigns, YouTube, and brand promotions using advanced editing tools.",
+                requirements: ["Premiere Pro", "After Effects", "Editing", "Color Grading", "Motion Graphics"],
+                salary: "₹5,00,000 - ₹10,00,000 per year",
+                location: "Mumbai",
+                jobType: "Full-time",
+                experienceLevel: 2,
+                position: 3,
+                created_by: { connect: { id: employer.id } }
+            },
+            {
+                title: "Office Administrator",
+                description: "Handle office operations, vendor coordination, scheduling, and administrative tasks.",
+                requirements: ["Administration", "Coordination", "Communication", "MS Office", "Organization"],
+                salary: "₹3,00,000 - ₹5,00,000 per year",
+                location: "Bangalore",
+                jobType: "Full-time",
+                experienceLevel: 1,
+                position: 2,
+                created_by: { connect: { id: employer.id } }
+            }
+
         ];
 
         for (const jobData of jobsData) {
             const job = await prisma.job.create({
                 data: jobData
             });
-            console.log(`✅ Created: ${job.title} (${job.location})`);
+            console.log(`Created: ${job.title} (${job.location})`);
         }
 
         console.log(`\n✨ Successfully created ${jobsData.length} jobs!`);
