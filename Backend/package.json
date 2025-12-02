@@ -6,7 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js",
     "kill-port": "bash kill-port.sh",
-    "restart": "bash kill-port.sh && npm run dev"
+    "restart": "bash kill-port.sh && npm run dev",
+    "seed": "node seedJobs.js",
+    "seed-dummy": "node seedDummyDataSafe.js"
   },
   "author": "",
   "license": "ISC",

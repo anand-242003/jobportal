@@ -13,6 +13,29 @@ export default function JobApplicantsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [jobTitle, setJobTitle] = useState("");
+  const [updating, setUpdating] = useState(false);
+
+  const handleStatusUpdate = async (applicationId, status) => {
+    if (updating) return;
+    
+    try {
+      setUpdating(true);
+      await axiosInstance.put(`/applications/${applicationId}/status`, { status });
+      
+      setApplications(prev => 
+        prev.map(app => 
+          app.id === applicationId ? { ...app, status } : app
+        )
+      );
+      
+      alert(`Application ${status.toLowerCase()} successfully!`);
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      alert(error.response?.data?.message || "Failed to update application status");
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   useEffect(() => {
     const fetchApplicants = async () => {
@@ -158,6 +181,34 @@ export default function JobApplicantsPage() {
                   </span>
                 </div>
               </div>
+
+              {app.status === "Pending" && (
+                <div className={styles.actionButtons}>
+                  <button
+                    onClick={() => handleStatusUpdate(app.id, "Accepted")}
+                    className={styles.acceptButton}
+                  >
+                    ✅ Accept
+                  </button>
+                  <button
+                    onClick={() => handleStatusUpdate(app.id, "Rejected")}
+                    className={styles.rejectButton}
+                  >
+                    ❌ Reject
+                  </button>
+                </div>
+              )}
+
+              {app.status === "Accepted" && (
+                <div className={styles.actionButtons}>
+                  <Link
+                    href={`/chat?userId=${app.applicant.id}`}
+                    className={styles.chatButton}
+                  >
+                    💬 Message Candidate
+                  </Link>
+                </div>
+              )}
             </div>
           ))}
         </div>

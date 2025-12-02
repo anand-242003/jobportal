@@ -1,12 +1,13 @@
 import express from "express";
-import { applyForJob, getJobApplications, getMyApplications, updateApplicationStatus } from "../controllers/applicationController.js";
-import { authmiddleware } from "../middlewares/authMiddleware.js";
+import { applyForJob, getJobApplications, getMyApplications, updateApplicationStatus, deleteApplication } from "../controllers/applicationController.js";
+import { authmiddleware, roleMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/:jobId", authmiddleware, applyForJob);
-router.get("/job/:jobId", authmiddleware, getJobApplications);
+router.post("/:jobId", authmiddleware, roleMiddleware(["Student", "Seeker"]), applyForJob);
+router.get("/job/:jobId", authmiddleware, roleMiddleware(["Employer", "Admin"]), getJobApplications);
 router.get("/my-applications", authmiddleware, getMyApplications);
-router.put("/:applicationId/status", authmiddleware, updateApplicationStatus);
+router.put("/:applicationId/status", authmiddleware, roleMiddleware(["Employer", "Admin"]), updateApplicationStatus);
+router.delete("/:applicationId", authmiddleware, deleteApplication);
 
 export default router;

@@ -163,3 +163,29 @@ export const getMyApplications = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const deleteApplication = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const userId = req.user.id;
+
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId }
+    });
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    if (application.applicantId !== userId) {
+      return res.status(403).json({ message: "Not authorized to delete this application" });
+    }
+
+    await prisma.application.delete({ where: { id: applicationId } });
+
+    res.status(200).json({ message: "Application withdrawn successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

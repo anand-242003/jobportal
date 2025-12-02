@@ -45,46 +45,47 @@ export const googleAuth = passport.authenticate("google", {
 
 export const googleCallback = (req, res, next) => {
     passport.authenticate("google", async (err, user) => {
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        
         if (err || !user) {
-            return res.redirect("http://localhost:3000/auth/login?error=oauth_failed");
+            return res.redirect(`${frontendUrl}/auth/login?error=oauth_failed`);
         }
 
         try {
-
             const accessToken = generateToken(user);
             const refreshToken = RefreshToken(user);
-
 
             await prisma.user.update({
                 where: { id: user.id },
                 data: { refreshToken: refreshToken }
             });
 
+            const isProduction = process.env.NODE_ENV === 'production';
 
             res.cookie("token", accessToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "lax",
+                secure: isProduction,
+                sameSite: isProduction ? "none" : "lax",
                 maxAge: 15 * 60 * 1000,
                 path: "/",
             });
 
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: false,
-                sameSite: "lax",
+                secure: isProduction,
+                sameSite: isProduction ? "none" : "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 path: "/",
             });
 
             const redirectUrl = user.role === "Employer"
-                ? "http://localhost:3000/dashboard/employer"
-                : "http://localhost:3000/jobs";
+                ? `${frontendUrl}/dashboard/employer`
+                : `${frontendUrl}/jobs`;
 
             res.redirect(redirectUrl);
         } catch (error) {
             console.error("OAuth Error:", error);
-            res.redirect("http://localhost:3000/auth/login?error=oauth_failed");
+            res.redirect(`${frontendUrl}/auth/login?error=oauth_failed`);
         }
     })(req, res, next);
 };

@@ -101,9 +101,19 @@ export default function ApplicationsPage() {
                                     </span>
                                 </div>
 
-                                <Link href={`/jobs/${app.jobId}`} className={styles.viewButton}>
-                                    View Job Details
-                                </Link>
+                                <div className={styles.cardActions}>
+                                    <Link href={`/jobs/${app.jobId}`} className={styles.viewButton}>
+                                        View Job Details
+                                    </Link>
+                                    {app.status === "Accepted" && app.job?.created_by && (
+                                        <Link 
+                                            href={`/chat?userId=${app.job.createdById}`} 
+                                            className={styles.chatButton}
+                                        >
+                                            💬 Message Employer
+                                        </Link>
+                                    )}
+                                </div>
                             </motion.div>
                         ))}
                     </div>

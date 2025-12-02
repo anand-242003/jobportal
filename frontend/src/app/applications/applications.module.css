@@ -186,6 +186,13 @@
     flex-shrink: 0;
 }
 
+.cardActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
 .viewButton {
     background: linear-gradient(135deg, var(--accent), var(--danger));
     color: white;
@@ -196,12 +203,29 @@
     text-align: center;
     transition: var(--transition);
     box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
-    margin-top: auto;
 }
 
 .viewButton:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(var(--danger-rgb), 0.5);
+}
+
+.chatButton {
+    background: #2196f3;
+    color: white;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.chatButton:hover {
+    background: #0b7dda;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
 }
 
 @media (max-width: 768px) {
