@@ -19,28 +19,25 @@
 }
 
 .chatButton.message {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    background: #3182ce;
 }
 
 .chatButton.message:hover:not(:disabled) {
+    background: #2c5aa0;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .chatButton.acceptAndChat {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    background: #10b981;
 }
 
 .chatButton.acceptAndChat:hover:not(:disabled) {
+    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 .chatButton.rejected {
-    background: #ccc;
-    box-shadow: none;
+    background: #cbd5e0;
 }
 
 .chatButton:active:not(:disabled) {

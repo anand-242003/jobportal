@@ -1,12 +1,6 @@
 import axios from "axios";
 
-let baseURL = "";
-
-if (process.env.NODE_ENV !== "production") {
-  baseURL = "/api"; // Use relative path to leverage Next.js proxy
-} else {
-  baseURL = "https://jobportal-oc40.onrender.com/api";
-}
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 const axiosInstance = axios.create({
   baseURL: baseURL,

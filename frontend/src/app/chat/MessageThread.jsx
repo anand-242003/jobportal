@@ -14,7 +14,8 @@ export default function MessageThread() {
         sendMessage,
         markAsRead,
         sendTyping,
-        stopTyping
+        stopTyping,
+        joinConversation
     } = useChat();
 
     const [messageInput, setMessageInput] = useState("");
@@ -80,7 +81,17 @@ export default function MessageThread() {
 
     const formatTime = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        const now = new Date();
+        const diffInHours = (now - date) / (1000 * 60 * 60);
+        
+        if (diffInHours < 24) {
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        } else if (diffInHours < 48) {
+            return 'Yesterday ' + date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        } else {
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + 
+                   date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
     };
 
     const getInitials = (name) => {
@@ -103,12 +114,12 @@ export default function MessageThread() {
                         {getInitials(activeConversation.otherUser.fullName)}
                     </div>
                 </div>
-                <div>
+                <div style={{ flex: 1 }}>
                     <div className={styles.userName}>
                         {activeConversation.otherUser.fullName}
                     </div>
-                    <div style={{ fontSize: "13px", color: "var(--foreground-muted)" }}>
-                        {activeConversation.otherUser.role}
+                    <div style={{ fontSize: "12px", color: "#718096" }}>
+                        <span className={styles.roleTag}>{activeConversation.otherUser.role}</span>
                     </div>
                 </div>
             </div>
@@ -117,9 +128,9 @@ export default function MessageThread() {
             <div className={styles.messagesContainer}>
                 {conversationMessages.length === 0 ? (
                     <div className={styles.emptyState}>
-                        <div className={styles.emptyIcon}>✉️</div>
-                        <h3>No messages yet</h3>
-                        <p>Start the conversation by sending a message below</p>
+                        <div className={styles.emptyIcon}>💬</div>
+                        <h3>Start the conversation</h3>
+                        <p>Send a message to begin your discussion with {activeConversation.otherUser.fullName}</p>
                     </div>
                 ) : (
                     conversationMessages.map((message) => {
@@ -168,16 +179,16 @@ export default function MessageThread() {
                         value={messageInput}
                         onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
-                        placeholder="Type your message..."
+                        placeholder="Type a message..."
                         rows={1}
                         style={{
                             height: "auto",
-                            minHeight: "52px",
-                            maxHeight: "140px"
+                            minHeight: "44px",
+                            maxHeight: "120px"
                         }}
                         onInput={(e) => {
                             e.target.style.height = "auto";
-                            e.target.style.height = Math.min(e.target.scrollHeight, 140) + "px";
+                            e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
                         }}
                     />
                     <button

@@ -96,12 +96,19 @@ export const initializeSocketHandlers = (io) => {
                     }
                 });
 
+                console.log(`Emitting new_message to conversation ${conversationId}`);
+                
                 io.to(conversationId).emit("new_message", {
                     message,
                     conversationId
                 });
 
                 io.to(recipientId).emit("new_message_notification", {
+                    message,
+                    conversationId
+                });
+
+                socket.emit("message_sent", {
                     message,
                     conversationId
                 });

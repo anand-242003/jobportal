@@ -11,9 +11,14 @@ const PORT = process.env.PORT || 5001;
 const httpServer = createServer(app);
 
 // Initialize Socket.io with CORS configuration
+const allowedOrigins = [
+  "http://localhost:3000",
+  process.env.FRONTEND_URL || "https://your-vercel-app.vercel.app"
+];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST"]
   }

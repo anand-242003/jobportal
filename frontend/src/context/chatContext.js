@@ -30,10 +30,22 @@ export function ChatProvider({ children }) {
                 });
 
                 socket.on("new_message", ({ message, conversationId }) => {
-                    setMessages(prev => ({
-                        ...prev,
-                        [conversationId]: [...(prev[conversationId] || []), message]
-                    }));
+                    console.log("Received new_message event:", message);
+                    
+                    setMessages(prev => {
+                        const existingMessages = prev[conversationId] || [];
+                        const filteredMessages = existingMessages.filter(m => !m._isOptimistic);
+                        
+                        const messageExists = filteredMessages.some(m => m.id === message.id);
+                        if (messageExists) {
+                            return prev;
+                        }
+                        
+                        return {
+                            ...prev,
+                            [conversationId]: [...filteredMessages, message]
+                        };
+                    });
 
                     setConversations(prev => prev.map(conv =>
                         conv.id === conversationId
@@ -62,6 +74,11 @@ export function ChatProvider({ children }) {
                         delete updated[conversationId];
                         return updated;
                     });
+                });
+
+                socket.on("error", (error) => {
+                    console.error("Socket error:", error);
+                    alert(error.message || "An error occurred");
                 });
             }
         }
@@ -106,6 +123,26 @@ export function ChatProvider({ children }) {
     const sendMessage = useCallback((conversationId, recipientId, content) => {
         const socket = getSocket();
         if (socket && socket.connected) {
+            const tempMessage = {
+                id: `temp-${Date.now()}`,
+                content,
+                senderId: user.id,
+                conversationId,
+                createdAt: new Date().toISOString(),
+                sender: {
+                    id: user.id,
+                    fullName: user.fullName,
+                    profilePhoto: user.profilePhoto,
+                    role: user.role
+                },
+                _isOptimistic: true
+            };
+
+            setMessages(prev => ({
+                ...prev,
+                [conversationId]: [...(prev[conversationId] || []), tempMessage]
+            }));
+
             socket.emit("send_message", {
                 conversationId,
                 recipientId,
@@ -113,8 +150,9 @@ export function ChatProvider({ children }) {
             });
         } else {
             console.error("Socket not connected");
+            alert("Not connected to chat server. Please refresh the page.");
         }
-    }, []);
+    }, [user]);
 
     const markAsRead = useCallback(async (conversationId) => {
         try {
