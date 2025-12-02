@@ -8,7 +8,6 @@ import styles from "./login.module.css";
 
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const router = useRouter();
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
