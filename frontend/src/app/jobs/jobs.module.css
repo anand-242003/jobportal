@@ -115,6 +115,30 @@
   border-color: var(--primary);
 }
 
+.clearButton {
+  padding: 0.875rem 1.25rem;
+  background: transparent;
+  border: 2px solid rgba(var(--danger-rgb), 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton:hover {
+  background: rgba(var(--danger-rgb), 0.05);
+  border-color: var(--danger);
+  color: var(--danger);
+  transform: translateY(-1px);
+}
+
 /* Loading State */
 .loadingContainer {
   display: flex;

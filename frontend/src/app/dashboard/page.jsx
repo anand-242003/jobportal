@@ -91,6 +91,34 @@ export default function DashboardPage() {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (type === 'resume') {
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      const allowedExtensions = ['.pdf', '.doc', '.docx'];
+      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes(fileExtension) || !allowedTypes.includes(file.type)) {
+        setMsg("Invalid file type. Please upload PDF, DOC, or DOCX files only.");
+        setErr(true);
+        e.target.value = '';
+        return;
+      }
+    } else if (type === 'photo') {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        setMsg("Invalid file type. Please upload JPEG, PNG, or WEBP images only.");
+        setErr(true);
+        e.target.value = '';
+        return;
+      }
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setMsg("File size must be less than 5MB");
+      setErr(true);
+      e.target.value = '';
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
 
@@ -106,10 +134,13 @@ export default function DashboardPage() {
 
       setProfile(res.data.user);
       setMsg(res.data.message);
+      e.target.value = '';
     } catch (error) {
       console.error(error);
-      setMsg("Upload failed.");
+      const errorMessage = error.response?.data?.message || "Upload failed. Please try again.";
+      setMsg(errorMessage);
       setErr(true);
+      e.target.value = '';
     } finally {
       setUploading(false);
     }

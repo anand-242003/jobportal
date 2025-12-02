@@ -19,6 +19,7 @@ export default function JobsPage() {
     location: "",
     jobType: "",
     experienceLevel: "",
+    datePosted: "",
   });
   const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
@@ -71,6 +72,17 @@ export default function JobsPage() {
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
+    setPage(1);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      location: "",
+      jobType: "",
+      experienceLevel: "",
+      datePosted: "",
+    });
+    setSearchTerm("");
     setPage(1);
   };
 
@@ -132,10 +144,21 @@ export default function JobsPage() {
               <option value="5">Senior (5+ years)</option>
             </select>
 
+            <select name="datePosted" onChange={handleFilterChange} value={filters.datePosted} className={styles.filterSelect}>
+              <option value="">Any Time</option>
+              <option value="24h">Last 24 hours</option>
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+            </select>
+
             <select onChange={(e) => setSort(e.target.value)} value={sort} className={styles.filterSelect}>
               <option value="newest">Newest First</option>
               <option value="salary">Highest Salary</option>
             </select>
+
+            <button onClick={clearFilters} className={styles.clearButton}>
+              Clear Filters
+            </button>
           </div>
         </div>
 

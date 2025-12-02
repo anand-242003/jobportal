@@ -153,22 +153,23 @@
 /* Submit Button */
 .submitButton {
   width: 100%;
-  padding: 1.25rem 2rem;
-  background: linear-gradient(135deg, var(--accent), var(--danger));
-  color: white;
-  border: none;
+  padding: 1rem 2rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
   margin-top: 1.5rem;
 }
 
 .submitButton:hover {
-  box-shadow: 0 6px 24px rgba(var(--danger-rgb), 0.5);
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 /* Messages */
