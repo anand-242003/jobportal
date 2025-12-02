@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/userContext";
 import { useChat } from "@/context/chatContext";
 import styles from "./Chat.module.css";
@@ -10,14 +10,36 @@ import MessageThread from "./MessageThread";
 
 export default function ChatPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user, loading } = useUser();
-    const { activeConversation, isConnected } = useChat();
+    const { activeConversation, isConnected, getOrCreateConversation, setActiveConversation } = useChat();
 
     useEffect(() => {
         if (!loading && !user) {
             router.push("/auth/login");
         }
     }, [user, loading, router]);
+
+    useEffect(() => {
+        const userId = searchParams.get('userId');
+        const applicationId = searchParams.get('applicationId');
+        const jobId = searchParams.get('jobId');
+
+        if (user && userId && !activeConversation) {
+            const params = {};
+            if (applicationId) params.applicationId = applicationId;
+            if (jobId) params.jobId = jobId;
+
+            getOrCreateConversation(userId, params)
+                .then(conversation => {
+                    setActiveConversation(conversation);
+                })
+                .catch(error => {
+                    console.error("Failed to open conversation:", error);
+                    alert(error.response?.data?.message || "Failed to open conversation");
+                });
+        }
+    }, [user, searchParams, activeConversation, getOrCreateConversation, setActiveConversation]);
 
     if (loading) {
         return <div style={{ padding: "40px", textAlign: "center" }}>Loading...</div>;

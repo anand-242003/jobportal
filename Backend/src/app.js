@@ -41,7 +41,9 @@ app.use(apiLimiter);
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  if (req.url.startsWith('/api/')) {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  }
   next();
 });
 
@@ -60,9 +62,13 @@ app.get("/api/test", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  const error = new Error("Route not found");
-  error.statusCode = 404;
-  next(error);
+  if (req.url.startsWith('/api/')) {
+    const error = new Error("Route not found");
+    error.statusCode = 404;
+    next(error);
+  } else {
+    res.status(404).send('Not Found');
+  }
 });
 
 app.use(errorHandler);

@@ -202,10 +202,10 @@ export default function JobApplicantsPage() {
               {app.status === "Accepted" && (
                 <div className={styles.actionButtons}>
                   <Link
-                    href={`/chat?userId=${app.applicant.id}`}
+                    href={`/chat?userId=${app.applicant.id}&applicationId=${app.id}&jobId=${app.jobId}`}
                     className={styles.chatButton}
                   >
-                    💬 Message Candidate
+                    Message Candidate
                   </Link>
                 </div>
               )}

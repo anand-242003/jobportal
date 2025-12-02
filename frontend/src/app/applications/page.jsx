@@ -107,10 +107,10 @@ export default function ApplicationsPage() {
                                     </Link>
                                     {app.status === "Accepted" && app.job?.created_by && (
                                         <Link 
-                                            href={`/chat?userId=${app.job.createdById}`} 
+                                            href={`/chat?userId=${app.job.createdById}&applicationId=${app.id}&jobId=${app.jobId}`} 
                                             className={styles.chatButton}
                                         >
-                                            💬 Message Employer
+                                            Message Employer
                                         </Link>
                                     )}
                                 </div>
