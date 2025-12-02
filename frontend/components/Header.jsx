@@ -53,20 +53,29 @@ export default function Header() {
           <Link href="/" className={styles.navLink}>
             Home
           </Link>
-          <Link href="/jobs" className={styles.navLink}>
-            Jobs
-          </Link>
-          <Link href="/companies" className={styles.navLink}>
-            Companies
-          </Link>
 
           {loading ? null : (
             user ? (
               <>
+                {/* Employer Navigation */}
                 {user.role === "Employer" && (
-                  <Link href="/jobs/post" className={styles.navLink}>
-                    Post a Job
-                  </Link>
+                  <>
+                    <Link href="/jobs/post" className={styles.navLink}>
+                      Post a Job
+                    </Link>
+                  </>
+                )}
+
+                {/* Job Seeker Navigation */}
+                {(user.role === "Student" || user.role === "Seeker") && (
+                  <>
+                    <Link href="/jobs" className={styles.navLink}>
+                      Find Jobs
+                    </Link>
+                    <Link href="/applications" className={styles.navLink}>
+                      My Applications
+                    </Link>
+                  </>
                 )}
 
                 <Link href="/chat" className={styles.navLink} style={{ position: "relative" }}>
@@ -122,6 +131,9 @@ export default function Header() {
               </>
             ) : (
               <>
+                <Link href="/jobs" className={styles.navLink}>
+                  Jobs
+                </Link>
                 <Link href="/auth/login" className={styles.navLink}>
                   Sign In
                 </Link>

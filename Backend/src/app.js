@@ -17,13 +17,17 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  process.env.FRONTEND_URL 
-];
+// Require FRONTEND_URL to be set
+if (!process.env.FRONTEND_URL) {
+  console.error("❌ ERROR: FRONTEND_URL environment variable is required");
+  process.exit(1);
+}
+
+const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(cors({
   origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {

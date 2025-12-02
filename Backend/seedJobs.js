@@ -17,8 +17,7 @@ async function clearAndSeedJobs() {
         const employer = await prisma.user.findFirst({
             where: { role: 'Employer' }
         });
-
-        if (!employer) {
+ if (!employer) {
             console.log(' No employer found. Please create an employer account first.');
             return;
         }

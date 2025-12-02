@@ -197,11 +197,29 @@ export function ChatProvider({ children }) {
             const url = `/chat/conversations/${otherUserId}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
             const { data } = await axiosInstance.get(url);
 
+            // Update conversations list immediately
             setConversations(prev => {
                 const exists = prev.find(c => c.id === data.id);
-                if (exists) return prev;
+                if (exists) {
+                    // Update existing conversation
+                    return prev.map(c => c.id === data.id ? data : c);
+                }
+                // Add new conversation at the top
                 return [data, ...prev];
             });
+
+            // Fetch messages for this conversation immediately
+            const messagesResponse = await axiosInstance.get(`/chat/messages/${data.id}`);
+            setMessages(prev => ({
+                ...prev,
+                [data.id]: messagesResponse.data.messages
+            }));
+
+            // Join the conversation via socket
+            const socket = getSocket();
+            if (socket) {
+                socket.emit("join_conversation", data.id);
+            }
 
             return data;
         } catch (error) {

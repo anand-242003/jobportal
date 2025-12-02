@@ -13,8 +13,24 @@ export default function JobDetailsPage() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
   const [msg, setMsg] = useState("");
   const [msgType, setMsgType] = useState("");
+
+  // Smart back button - goes to employer dashboard if employer, otherwise jobs page
+  const getBackLink = () => {
+    if (user?.role === "Employer") {
+      return "/dashboard/employer";
+    }
+    return "/jobs";
+  };
+
+  const getBackText = () => {
+    if (user?.role === "Employer") {
+      return "← Back to Dashboard";
+    }
+    return "← Back to Jobs";
+  };
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -30,6 +46,23 @@ export default function JobDetailsPage() {
 
     if (id) fetchJob();
   }, [id]);
+
+  // Check if user already applied
+  useEffect(() => {
+    const checkApplication = async () => {
+      if (!user || user.role !== "Student") return;
+      
+      try {
+        const { data } = await axiosInstance.get("/applications/my-applications");
+        const alreadyApplied = data.some(app => app.jobId === id);
+        setHasApplied(alreadyApplied);
+      } catch (error) {
+        console.error("Error checking application:", error);
+      }
+    };
+
+    checkApplication();
+  }, [user, id]);
 
   const handleApply = async () => {
     if (!user) {
@@ -50,6 +83,7 @@ export default function JobDetailsPage() {
       await axiosInstance.post(`/applications/${id}`);
       setMsg("Application submitted successfully!");
       setMsgType("success");
+      setHasApplied(true);
     } catch (error) {
       setMsg(error.response?.data?.message || "Failed to apply");
       setMsgType("error");
@@ -73,7 +107,7 @@ export default function JobDetailsPage() {
       <div className={styles.page}>
         <div className={styles.container}>
           <div className={styles.error}>Job not found</div>
-          <Link href="/jobs" className={styles.backLink}>← Back to Jobs</Link>
+          <Link href={getBackLink()} className={styles.backLink}>{getBackText()}</Link>
         </div>
       </div>
     );
@@ -82,7 +116,7 @@ export default function JobDetailsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <Link href="/jobs" className={styles.backLink}>← Back to Jobs</Link>
+        <Link href={getBackLink()} className={styles.backLink}>{getBackText()}</Link>
 
         <div className={styles.jobHeader}>
           <div className={styles.headerContent}>
@@ -96,9 +130,9 @@ export default function JobDetailsPage() {
             <button
               className={styles.applyButton}
               onClick={handleApply}
-              disabled={applying || msgType === "success"}
+              disabled={applying || hasApplied || msgType === "success"}
             >
-              {applying ? "Applying..." : msgType === "success" ? "Applied ✓" : "Apply Now"}
+              {applying ? "Applying..." : (hasApplied || msgType === "success") ? "Applied ✓" : "Apply Now"}
             </button>
           )}
         </div>

@@ -8,7 +8,8 @@
     "kill-port": "bash kill-port.sh",
     "restart": "bash kill-port.sh && npm run dev",
     "seed": "node seedJobs.js",
-    "seed-dummy": "node seedDummyDataSafe.js"
+    "seed-dummy": "node seedDummyDataSafe.js",
+    "clean-seed": "node cleanAndSeedData.js"
   },
   "author": "",
   "license": "ISC",

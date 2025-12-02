@@ -31,9 +31,11 @@ export default function MessageThread() {
 
     useEffect(() => {
         if (activeConversation) {
+            // Join conversation and mark as read
+            joinConversation(activeConversation.id);
             markAsRead(activeConversation.id);
         }
-    }, [activeConversation, conversationMessages, markAsRead]);
+    }, [activeConversation, markAsRead, joinConversation]);
 
     const handleInputChange = (e) => {
         setMessageInput(e.target.value);

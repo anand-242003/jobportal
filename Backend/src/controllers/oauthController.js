@@ -45,7 +45,12 @@ export const googleAuth = passport.authenticate("google", {
 
 export const googleCallback = (req, res, next) => {
     passport.authenticate("google", async (err, user) => {
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const frontendUrl = process.env.FRONTEND_URL;
+        
+        if (!frontendUrl) {
+            console.error("❌ FRONTEND_URL not configured");
+            return res.status(500).json({ message: "Server configuration error" });
+        }
         
         if (err || !user) {
             return res.redirect(`${frontendUrl}/auth/login?error=oauth_failed`);

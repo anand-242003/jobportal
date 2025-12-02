@@ -8,7 +8,12 @@ export const initializeSocket = () => {
         return socket;
     }
 
-    const socketURL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5001";
+    const socketURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+    
+    if (!socketURL) {
+        console.error("❌ NEXT_PUBLIC_SOCKET_URL is not configured");
+        throw new Error("Socket URL not configured. Please set NEXT_PUBLIC_SOCKET_URL in your environment variables.");
+    }
 
     socket = io(socketURL, {
         withCredentials: true,

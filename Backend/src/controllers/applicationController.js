@@ -145,8 +145,10 @@ export const getMyApplications = async (req, res) => {
             jobType: true,
             experienceLevel: true,
             createdAt: true,
+            createdById: true,
             created_by: {
               select: {
+                id: true,
                 fullName: true,
                 email: true
               }

@@ -25,21 +25,26 @@ export default function ChatPage() {
         const applicationId = searchParams.get('applicationId');
         const jobId = searchParams.get('jobId');
 
-        if (user && userId && !activeConversation) {
-            const params = {};
-            if (applicationId) params.applicationId = applicationId;
-            if (jobId) params.jobId = jobId;
+        if (user && userId) {
+            // Only create conversation if we don't already have it active
+            if (!activeConversation || activeConversation.otherUser.id !== parseInt(userId)) {
+                const params = {};
+                if (applicationId) params.applicationId = applicationId;
+                if (jobId) params.jobId = jobId;
 
-            getOrCreateConversation(userId, params)
-                .then(conversation => {
-                    setActiveConversation(conversation);
-                })
-                .catch(error => {
-                    console.error("Failed to open conversation:", error);
-                    alert(error.response?.data?.message || "Failed to open conversation");
-                });
+                getOrCreateConversation(userId, params)
+                    .then(conversation => {
+                        setActiveConversation(conversation);
+                        // Clean up URL params after opening conversation
+                        router.replace('/chat', { scroll: false });
+                    })
+                    .catch(error => {
+                        console.error("Failed to open conversation:", error);
+                        alert(error.response?.data?.message || "Failed to open conversation");
+                    });
+            }
         }
-    }, [user, searchParams, activeConversation, getOrCreateConversation, setActiveConversation]);
+    }, [user, searchParams, activeConversation, getOrCreateConversation, setActiveConversation, router]);
 
     if (loading) {
         return <div style={{ padding: "40px", textAlign: "center" }}>Loading...</div>;
