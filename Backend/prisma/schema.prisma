@@ -25,6 +25,11 @@ model User {
   // Relations
   createdJobs  Job[]         @relation("CreatedJobs")
   applications Application[] // A user can apply to many jobs
+  
+  // Chat relations
+  conversationsAsUser1 Conversation[] @relation("UserConversations1")
+  conversationsAsUser2 Conversation[] @relation("UserConversations2")
+  sentMessages         Message[]      @relation("SentMessages")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -53,7 +58,7 @@ model Job {
 
 model Application {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  status      String   @default("Pending")
+  status      ApplicationStatus @default(Pending)
   jobId       String   @db.ObjectId
   applicantId String   @db.ObjectId
   job         Job      @relation(fields: [jobId], references: [id])
@@ -62,9 +67,65 @@ model Application {
   updatedAt   DateTime @updatedAt
 }
 
+enum ApplicationStatus {
+  Pending
+  Accepted
+  Rejected
+}
+
 enum Role {
   Admin
   Employer
   Student
   Seeker
+}
+
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  participants  String[] @db.ObjectId // Array of user IDs for easy querying
+  
+  lastMessage   String?
+  lastMessageAt DateTime?
+  
+  // Relations - explicit user1 and user2 for unique constraint
+  user1         User     @relation("UserConversations1", fields: [user1Id], references: [id])
+  user1Id       String   @db.ObjectId
+  user2         User     @relation("UserConversations2", fields: [user2Id], references: [id])
+  user2Id       String   @db.ObjectId
+  
+  // Link to application (optional - for application-based chats)
+  applicationId String?  @db.ObjectId
+  jobId         String?  @db.ObjectId
+  
+  // Track who initiated the conversation (recruiter must initiate)
+  // Optional for backward compatibility with existing conversations
+  initiatedBy   String?  @db.ObjectId
+  
+  messages      Message[]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@unique([user1Id, user2Id])
+  @@index([participants])
+  @@index([applicationId])
+}
+
+model Message {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  content        String
+  isRead         Boolean      @default(false)
+  
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String       @db.ObjectId
+  
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+  senderId       String       @db.ObjectId
+  
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  @@index([conversationId])
+  @@index([senderId])
 }
