@@ -11,15 +11,7 @@ export default function Footer() {
                     <div className={styles.column}>
                         <div className={styles.logo}>
                             <div className={styles.logoContainer}>
-                                {/* <Image
-                                    src="/job.png"
-                                    alt="JobPortal Logo"
-                                    width={55}
-                                    height={55}
-                                    className={styles.logoImage}
-                                    priority
-                                    unoptimized
-                                /> */}
+                              
                             </div>
                         </div>
                         <p className={styles.description}>

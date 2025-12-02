@@ -8,8 +8,6 @@ export const initializeSocket = () => {
         return socket;
     }
 
-    // Create socket connection
-    // withCredentials: true ensures cookies are sent with the request
     socket = io("http://localhost:5001", {
         withCredentials: true,
         autoConnect: true,
@@ -18,7 +16,7 @@ export const initializeSocket = () => {
         reconnectionDelayMax: 5000,
         reconnectionAttempts: 10,
         timeout: 10000,
-        transports: ['websocket', 'polling'] // Try websocket first, fallback to polling
+        transports: ['websocket', 'polling']
     });
 
     socket.on("connect", () => {
@@ -26,7 +24,6 @@ export const initializeSocket = () => {
     });
 
     socket.on("connect_error", (error) => {
-        // Only log if it's not the initial connection attempt
         if (socket.io.engine.transport) {
             console.warn("⚠️ Socket connection error:", error.message);
         }
@@ -35,7 +32,6 @@ export const initializeSocket = () => {
     socket.on("disconnect", (reason) => {
         console.log("🔌 Socket disconnected:", reason);
         if (reason === 'io server disconnect') {
-            // Server disconnected, try to reconnect
             socket.connect();
         }
     });

@@ -1,6 +1,5 @@
 import prisma from "../config/db.js";
 
-
 export const applyForJob = async (req, res) => {
   try {
     const { jobId } = req.params;

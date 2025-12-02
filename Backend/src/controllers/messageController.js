@@ -1,11 +1,9 @@
 import prisma from "../config/db.js";
 
-// Get all conversations for the logged-in user
 export const getConversations = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // Find all conversations where user is either user1 or user2
         const conversations = await prisma.conversation.findMany({
             where: {
                 OR: [
@@ -45,7 +43,6 @@ export const getConversations = async (req, res) => {
             }
         });
 
-        // Format conversations to include the other user and unread count
         const formattedConversations = conversations.map(conv => {
             const otherUser = conv.user1Id === userId ? conv.user2 : conv.user1;
             return {
@@ -66,7 +63,6 @@ export const getConversations = async (req, res) => {
     }
 };
 
-// Get or create a conversation with a specific user (for recruiters with accepted applications)
 export const getOrCreateConversation = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -77,7 +73,6 @@ export const getOrCreateConversation = async (req, res) => {
             return res.status(400).json({ message: "Cannot create conversation with yourself" });
         }
 
-        // Check if other user exists
         const otherUser = await prisma.user.findUnique({
             where: { id: otherUserId },
             select: {
@@ -98,10 +93,8 @@ export const getOrCreateConversation = async (req, res) => {
             select: { role: true }
         });
 
-        // Determine user1 and user2 (smaller ID first for unique constraint)
         const [user1Id, user2Id] = [userId, otherUserId].sort();
 
-        // Try to find existing conversation
         let conversation = await prisma.conversation.findUnique({
             where: {
                 user1Id_user2Id: {
@@ -131,16 +124,13 @@ export const getOrCreateConversation = async (req, res) => {
             }
         });
 
-        // If conversation doesn't exist, only recruiters can create it
         if (!conversation) {
-            // Check if user is a recruiter/employer
             if (currentUser.role !== 'Employer' && currentUser.role !== 'Admin') {
                 return res.status(403).json({ 
                     message: "Only recruiters can initiate conversations. Wait for the recruiter to contact you." 
                 });
             }
 
-            // If applicationId provided, verify the application is accepted
             if (applicationId) {
                 const application = await prisma.application.findUnique({
                     where: { id: applicationId },
@@ -157,7 +147,6 @@ export const getOrCreateConversation = async (req, res) => {
                     });
                 }
 
-                // Verify the recruiter owns the job
                 if (application.job.createdById !== userId) {
                     return res.status(403).json({ 
                         message: "You can only start conversations for your own job postings" 
@@ -165,7 +154,6 @@ export const getOrCreateConversation = async (req, res) => {
                 }
             }
 
-            // Create conversation
             conversation = await prisma.conversation.create({
                 data: {
                     user1Id,
@@ -198,7 +186,6 @@ export const getOrCreateConversation = async (req, res) => {
             });
         }
 
-        // Format response
         const response = {
             id: conversation.id,
             otherUser,
@@ -218,14 +205,12 @@ export const getOrCreateConversation = async (req, res) => {
     }
 };
 
-// Get messages for a specific conversation
 export const getMessages = async (req, res) => {
     try {
         const userId = req.user.id;
         const { conversationId } = req.params;
         const { page = 1, limit = 50 } = req.query;
 
-        // Verify user is part of the conversation
         const conversation = await prisma.conversation.findFirst({
             where: {
                 id: conversationId,
@@ -242,7 +227,6 @@ export const getMessages = async (req, res) => {
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
-        // Get messages
         const [messages, totalCount] = await Promise.all([
             prisma.message.findMany({
                 where: { conversationId },
@@ -263,7 +247,6 @@ export const getMessages = async (req, res) => {
             prisma.message.count({ where: { conversationId } })
         ]);
 
-        // Reverse to show oldest first
         messages.reverse();
 
         const totalPages = Math.ceil(totalCount / parseInt(limit));
@@ -283,13 +266,11 @@ export const getMessages = async (req, res) => {
     }
 };
 
-// Mark messages as read
 export const markMessagesAsRead = async (req, res) => {
     try {
         const userId = req.user.id;
         const { conversationId } = req.params;
 
-        // Verify user is part of the conversation
         const conversation = await prisma.conversation.findFirst({
             where: {
                 id: conversationId,
@@ -304,7 +285,6 @@ export const markMessagesAsRead = async (req, res) => {
             return res.status(403).json({ message: "Access denied to this conversation" });
         }
 
-        // Mark all unread messages in this conversation as read
         const result = await prisma.message.updateMany({
             where: {
                 conversationId,

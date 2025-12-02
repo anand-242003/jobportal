@@ -16,7 +16,6 @@ export default function ChatButton({ application, onStatusUpdate }) {
         try {
             setLoading(true);
 
-            // First, accept the application if not already accepted
             if (status !== 'Accepted') {
                 await axiosInstance.put(`/applications/${application.id}/status`, {
                     status: 'Accepted'
@@ -27,7 +26,6 @@ export default function ChatButton({ application, onStatusUpdate }) {
                 }
             }
 
-            // Create or get conversation
             const conversation = await getOrCreateConversation(
                 application.applicant.id,
                 {
@@ -54,7 +52,6 @@ export default function ChatButton({ application, onStatusUpdate }) {
         try {
             setLoading(true);
 
-            // Get or create conversation
             const conversation = await getOrCreateConversation(
                 application.applicant.id,
                 {

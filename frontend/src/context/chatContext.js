@@ -16,14 +16,11 @@ export function ChatProvider({ children }) {
     const [typingUsers, setTypingUsers] = useState({});
     const [isConnected, setIsConnected] = useState(false);
 
-    // Initialize Socket.io when user is authenticated
     useEffect(() => {
         if (user) {
-            // Initialize socket with cookie-based auth
             const socket = initializeSocket();
 
             if (socket) {
-                // Socket event listeners
                 socket.on("connect", () => {
                     setIsConnected(true);
                 });
@@ -33,20 +30,17 @@ export function ChatProvider({ children }) {
                 });
 
                 socket.on("new_message", ({ message, conversationId }) => {
-                    // Add message to messages state
                     setMessages(prev => ({
                         ...prev,
                         [conversationId]: [...(prev[conversationId] || []), message]
                     }));
 
-                    // Update conversation's last message
                     setConversations(prev => prev.map(conv =>
                         conv.id === conversationId
                             ? { ...conv, lastMessage: message.content, lastMessageAt: message.createdAt }
                             : conv
                     ));
 
-                    // Increment unread count if not in active conversation
                     if (activeConversation?.id !== conversationId && message.senderId !== user.id) {
                         setUnreadCounts(prev => ({
                             ...prev,
@@ -78,16 +72,13 @@ export function ChatProvider({ children }) {
         };
     }, [user, activeConversation]);
 
-    // Fetch conversations
     const fetchConversations = useCallback(async () => {
         try {
             const { data } = await axiosInstance.get("/chat/conversations");
             
-            // Filter conversations - only show if there's at least one message
             const activeConversations = data.filter(conv => conv.lastMessage);
             setConversations(activeConversations);
 
-            // Set unread counts
             const counts = {};
             activeConversations.forEach(conv => {
                 if (conv.unreadCount > 0) {
@@ -100,7 +91,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Fetch messages for a conversation
     const fetchMessages = useCallback(async (conversationId) => {
         try {
             const { data } = await axiosInstance.get(`/chat/messages/${conversationId}`);
@@ -113,7 +103,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Send message
     const sendMessage = useCallback((conversationId, recipientId, content) => {
         const socket = getSocket();
         if (socket && socket.connected) {
@@ -127,7 +116,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Mark messages as read
     const markAsRead = useCallback(async (conversationId) => {
         try {
             await axiosInstance.put(`/chat/messages/${conversationId}/read`);
@@ -141,7 +129,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Join conversation room
     const joinConversation = useCallback((conversationId) => {
         const socket = getSocket();
         if (socket) {
@@ -149,7 +136,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Send typing indicator
     const sendTyping = useCallback((conversationId, recipientId) => {
         const socket = getSocket();
         if (socket) {
@@ -157,7 +143,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Stop typing indicator
     const stopTyping = useCallback((conversationId, recipientId) => {
         const socket = getSocket();
         if (socket) {
@@ -165,7 +150,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Get or create conversation
     const getOrCreateConversation = useCallback(async (otherUserId, params = {}) => {
         try {
             const queryParams = new URLSearchParams();
@@ -175,7 +159,6 @@ export function ChatProvider({ children }) {
             const url = `/chat/conversations/${otherUserId}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
             const { data } = await axiosInstance.get(url);
 
-            // Add to conversations if not exists
             setConversations(prev => {
                 const exists = prev.find(c => c.id === data.id);
                 if (exists) return prev;
@@ -189,7 +172,6 @@ export function ChatProvider({ children }) {
         }
     }, []);
 
-    // Total unread count
     const totalUnreadCount = Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
 
     const contextValue = {
