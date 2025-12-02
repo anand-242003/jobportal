@@ -14,12 +14,11 @@ export function UserProvider({ children }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-
         const { data } = await axiosInstance.get("/users/profile");
         setUser(data);
-
       } catch (error) {
-
+        console.log("Not authenticated or session expired");
+        setUser(null);
       } finally {
         setLoading(false);
       }

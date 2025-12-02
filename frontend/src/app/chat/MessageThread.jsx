@@ -25,12 +25,10 @@ export default function MessageThread() {
 
     const conversationMessages = messages[activeConversation?.id] || [];
 
-    // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [conversationMessages]);
 
-    // Mark messages as read when conversation is active
     useEffect(() => {
         if (activeConversation) {
             markAsRead(activeConversation.id);
@@ -40,18 +38,15 @@ export default function MessageThread() {
     const handleInputChange = (e) => {
         setMessageInput(e.target.value);
 
-        // Send typing indicator
         if (!isTyping) {
             setIsTyping(true);
             sendTyping(activeConversation.id, activeConversation.otherUser.id);
         }
 
-        // Clear previous timeout
         if (typingTimeoutRef.current) {
             clearTimeout(typingTimeoutRef.current);
         }
 
-        // Stop typing after 2 seconds of no input
         typingTimeoutRef.current = setTimeout(() => {
             setIsTyping(false);
             stopTyping(activeConversation.id, activeConversation.otherUser.id);
@@ -124,7 +119,6 @@ export default function MessageThread() {
                 </div>
             </div>
 
-            {/* Messages Container */}
             <div className={styles.messagesContainer}>
                 {conversationMessages.length === 0 ? (
                     <div className={styles.emptyState}>
@@ -158,7 +152,6 @@ export default function MessageThread() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Typing Indicator */}
             {isTypingNow && (
                 <div className={styles.typingIndicator}>
                     <div className={styles.messageAvatar} style={{ width: "32px", height: "32px", fontSize: "12px" }}>
@@ -172,7 +165,6 @@ export default function MessageThread() {
                 </div>
             )}
 
-            {/* Message Input */}
             <div className={styles.messageInput}>
                 <div className={styles.inputContainer}>
                     <textarea

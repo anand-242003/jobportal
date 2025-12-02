@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes("/auth/refresh")) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes("/auth/refresh") && !originalRequest.url.includes("/users/profile")) {
 
       if (isRefreshing) {
         return Promise.reject(error);
@@ -38,13 +38,14 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         isRefreshing = false;
 
-        const publicPages = ["/", "/jobs", "/companies", "/auth/login", "/auth/signup"];
+        const publicPages = ["/", "/jobs", "/companies", "/auth/login", "/auth/signup", "/chat"];
         const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
 
         if (typeof window !== "undefined" &&
           !publicPages.includes(currentPath) &&
           !currentPath.startsWith("/jobs/") &&
           !currentPath.includes("/auth/")) {
+          console.log("Session expired, redirecting to login");
           window.location.href = "/auth/login";
         }
 
