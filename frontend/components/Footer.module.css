@@ -31,21 +31,14 @@
 }
 
 .logoContainer {
-    padding: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition);
-    cursor: pointer;
+    /* cursor: pointer; Removed pointer cursor */
 }
 
-.logoContainer:hover {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-}
+
 
 .logoIcon {
     width: 40px;
@@ -66,9 +59,7 @@
     transition: var(--transition);
 }
 
-.logoContainer:hover .logoImage {
-    transform: scale(1.05);
-}
+
 
 .logo h3 {
     font-size: 1.4rem;

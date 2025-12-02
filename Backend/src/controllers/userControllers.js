@@ -59,9 +59,18 @@ export const uploadResume = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return res.status(400).json({ message: "Invalid file type. Please upload PDF, DOC, or DOCX files only." });
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return res.status(400).json({ message: "File size exceeds 5MB limit" });
+    }
+
     const result = await imagekit.upload({
       file: file.buffer,
-      fileName: file.originalname,
+      fileName: `resume_${req.user.id}_${Date.now()}_${file.originalname}`,
       folder: "/resumes",
     });
 
@@ -73,8 +82,15 @@ export const uploadResume = async (req, res) => {
       },
       select: {
         id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        profileBio: true,
+        skills: true,
         resume: true,
         resumeOriginalname: true,
+        profilePhoto: true,
+        phoneNumber: true,
       },
     });
 
@@ -92,9 +108,14 @@ export const uploadProfilePhoto = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return res.status(400).json({ message: "Invalid file type. Please upload JPEG, PNG, or WEBP images only." });
+    }
+
     const result = await imagekit.upload({
       file: file.buffer,
-      fileName: `profile_${req.user.id}`,
+      fileName: `profile_${req.user.id}_${Date.now()}`,
       folder: "/avatars",
     });
 
@@ -105,7 +126,15 @@ export const uploadProfilePhoto = async (req, res) => {
       },
       select: {
         id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        profileBio: true,
+        skills: true,
+        resume: true,
+        resumeOriginalname: true,
         profilePhoto: true,
+        phoneNumber: true,
       },
     });
 

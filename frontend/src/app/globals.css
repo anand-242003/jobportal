@@ -164,3 +164,20 @@ a {
 a:hover {
     color: var(--danger);
 }
+
+/* Chat-specific variables */
+:root {
+    --foreground: var(--text-primary);
+    --foreground-muted: var(--text-muted);
+    --background: var(--bg-soft-white);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --hover-bg: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="dark"] {
+    --foreground: var(--text-primary);
+    --foreground-muted: var(--text-muted);
+    --background: var(--bg-soft-white);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+}

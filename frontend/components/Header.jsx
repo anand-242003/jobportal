@@ -5,11 +5,13 @@ import { useState } from "react";
 import styles from "./Header.module.css";
 import { useUser } from "../src/context/userContext";
 import { useTheme } from "../src/context/themeContext";
+import { useChat } from "../src/context/chatContext";
 import axiosInstance from "../src/utils/axiosInstance";
 
 export default function Header() {
   const { user, loading, setUser } = useUser();
   const { theme, toggleTheme } = useTheme();
+  const { totalUnreadCount } = useChat();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -66,6 +68,27 @@ export default function Header() {
                     Post a Job
                   </Link>
                 )}
+
+                <Link href="/chat" className={styles.navLink} style={{ position: "relative" }}>
+                  Messages
+                  {totalUnreadCount > 0 && (
+                    <span style={{
+                      position: "absolute",
+                      top: "-4px",
+                      right: "-8px",
+                      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      color: "white",
+                      borderRadius: "10px",
+                      padding: "2px 6px",
+                      fontSize: "10px",
+                      fontWeight: "700",
+                      minWidth: "18px",
+                      textAlign: "center"
+                    }}>
+                      {totalUnreadCount > 99 ? "99+" : totalUnreadCount}
+                    </span>
+                  )}
+                </Link>
 
                 <Link href={user.role === "Employer" ? "/dashboard/employer" : "/dashboard"} className={styles.navLink}>
                   Dashboard

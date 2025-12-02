@@ -72,6 +72,7 @@ export const getAllJobs = async (req, res) => {
       location,
       jobType,
       experienceLevel,
+      datePosted,
       page = 1,
       limit = 10
     } = req.query;
@@ -80,61 +81,95 @@ export const getAllJobs = async (req, res) => {
 
     if (search) {
       query.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { location: { contains: search, mode: "insensitive" } },
-        { created_by: { fullName: { contains: search, mode: "insensitive" } } }
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
       ];
     }
 
     if (location) {
-      query.location = { contains: location, mode: "insensitive" };
+      query.location = { contains: location, mode: 'insensitive' };
     }
+
     if (jobType) {
-      query.jobType = { equals: jobType, mode: "insensitive" };
+      query.jobType = jobType;
     }
+
     if (experienceLevel) {
       query.experienceLevel = { gte: parseInt(experienceLevel) };
     }
 
-    let orderBy = { createdAt: "desc" };
-    if (sort === "oldest") orderBy = { createdAt: "asc" };
-    if (sort === "salary_high") orderBy = { salary: "desc" };
-    if (sort === "salary_low") orderBy = { salary: "asc" };
+    if (datePosted) {
+      const now = new Date();
+      let dateThreshold;
 
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const skip = (pageNum - 1) * limitNum;
+      switch (datePosted) {
+        case '24h':
+          dateThreshold = new Date(now.setDate(now.getDate() - 1));
+          break;
+        case '7d':
+          dateThreshold = new Date(now.setDate(now.getDate() - 7));
+          break;
+        case '30d':
+          dateThreshold = new Date(now.setDate(now.getDate() - 30));
+          break;
+        default:
+          dateThreshold = null;
+      }
 
-    const [jobs, totalJobs] = await Promise.all([
+      if (dateThreshold) {
+        query.createdAt = { gte: dateThreshold };
+      }
+    }
+
+    let orderBy = {};
+    if (sort === 'newest') {
+      orderBy = { createdAt: 'desc' };
+    } else if (sort === 'oldest') {
+      orderBy = { createdAt: 'asc' };
+    } else if (sort === 'salary') {
+      orderBy = { salary: 'desc' };
+    } else {
+      orderBy = { createdAt: 'desc' };
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [jobs, totalCount] = await Promise.all([
       prisma.job.findMany({
         where: query,
-        orderBy: orderBy,
-        skip: skip,
-        take: limitNum,
+        orderBy,
+        skip,
+        take: parseInt(limit),
         include: {
           created_by: {
-            select: { fullName: true, email: true }
+            select: {
+              fullName: true,
+              email: true,
+            }
+          },
+          _count: {
+            select: { applications: true }
           }
         }
       }),
       prisma.job.count({ where: query })
     ]);
 
-    const totalPages = Math.ceil(totalJobs / limitNum);
+    const totalPages = Math.ceil(totalCount / parseInt(limit));
 
     res.status(200).json({
       jobs,
       pagination: {
-        totalJobs,
+        currentPage: parseInt(page),
         totalPages,
-        currentPage: pageNum,
-        limit: limitNum
+        totalJobs: totalCount,
+        hasMore: parseInt(page) < totalPages
       }
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Get jobs error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

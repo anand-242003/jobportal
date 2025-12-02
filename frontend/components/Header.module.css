@@ -10,7 +10,7 @@
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  /* padding: 1rem 2rem; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,9 +25,7 @@
   transition: var(--transition);
 }
 
-.logoWrapper:hover {
-  transform: translateY(-2px);
-}
+
 
 .logoContainer {
   position: relative;
@@ -35,20 +33,17 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.05));
+  /* background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.05)); */
   border-radius: var(--radius-sm);
   transition: var(--transition);
 }
 
-.logoWrapper:hover .logoContainer {
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.1));
-  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.15);
-}
+
 
 .logoIcon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  /* background: linear-gradient(135deg, var(--primary), var(--accent)); */
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -59,15 +54,13 @@
 }
 
 .logoImage {
-  width: 65px;
-  height: 65px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
   transition: var(--transition);
 }
 
-.logoWrapper:hover .logoImage {
-  transform: scale(1.05);
-}
+
 
 .logoText h2 {
   font-size: 1.5rem;
@@ -153,18 +146,20 @@
 }
 
 .navButton {
-  background: linear-gradient(135deg, var(--accent), var(--danger));
-  color: white;
-  font-weight: 600;
-  padding: 0.65rem 1.5rem;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  font-size: 0.85rem;
 }
 
 .navButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(var(--danger-rgb), 0.4);
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .themeToggle {

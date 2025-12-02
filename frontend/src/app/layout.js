@@ -1,5 +1,6 @@
 import { UserProvider } from "../context/userContext";
 import { ThemeProvider } from "../context/themeContext";
+import { ChatProvider } from "../context/chatContext";
 import ConditionalHeader from "../../components/ConditionalHeader";
 import Footer from "../../components/Footer";
 import "./globals.css";
@@ -15,9 +16,11 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <ThemeProvider>
           <UserProvider>
-            <ConditionalHeader />
-            {children}
-            <Footer />
+            <ChatProvider>
+              <ConditionalHeader />
+              {children}
+              <Footer />
+            </ChatProvider>
           </UserProvider>
         </ThemeProvider>
       </body>

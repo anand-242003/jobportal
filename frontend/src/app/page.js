@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axiosInstance";
 import styles from "./page.module.css";
+import { useUser } from "@/context/userContext";
 
 export default function HomePage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [featuredJobs, setFeaturedJobs] = useState([]);
+    const { user } = useUser();
 
     useEffect(() => {
 
@@ -91,9 +93,15 @@ export default function HomePage() {
                         <Link href="/jobs" className={styles.ctaPrimary}>
                             Explore Jobs →
                         </Link>
-                        <Link href="/auth/signup" className={styles.ctaSecondary}>
-                            Sign Up Free
-                        </Link>
+                        {user ? (
+                            <Link href={user.role === "Employer" ? "/dashboard/employer" : "/dashboard"} className={styles.ctaSecondary}>
+                                Go to Dashboard
+                            </Link>
+                        ) : (
+                            <Link href="/auth/signup" className={styles.ctaSecondary}>
+                                Sign Up Free
+                            </Link>
+                        )}
                     </div>
                 </motion.div>
             </section>
