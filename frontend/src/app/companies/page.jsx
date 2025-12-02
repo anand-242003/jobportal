@@ -157,28 +157,34 @@ export default function CompaniesPage() {
                         {filteredCompanies.map((company) => (
                             <div key={company.id} className={styles.companyCard}>
                                 <div className={styles.companyHeader}>
+                                    <div className={styles.companyLogo}>
+                                        <div className={styles.logoPlaceholder}>
+                                            {company.name.charAt(0)}
+                                        </div>
+                                    </div>
                                     <div className={styles.companyInfo}>
                                         <h2 className={styles.companyName}>{company.name}</h2>
                                         <div className={styles.companyMeta}>
                                             <span className={styles.jobCount}>
-                                                {company.totalJobs} {company.totalJobs === 1 ? 'position' : 'positions'}
+                                                {company.totalJobs} open {company.totalJobs === 1 ? 'position' : 'positions'}
                                             </span>
                                             <span className={styles.separator}>•</span>
                                             <span className={styles.locations}>
                                                 {company.locations.slice(0, 2).join(", ")}
-                                                {company.locations.length > 2 && ` +${company.locations.length - 2}`}
+                                                {company.locations.length > 2 && ` +${company.locations.length - 2} more`}
                                             </span>
                                         </div>
-                                    </div>
-                                    <div className={styles.jobTypes}>
-                                        {company.jobTypes.map(type => (
-                                            <span key={type} className={styles.typeTag}>{type}</span>
-                                        ))}
+                                        <div className={styles.jobTypes}>
+                                            {company.jobTypes.slice(0, 3).map(type => (
+                                                <span key={type} className={styles.typeTag}>{type}</span>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className={styles.jobsList}>
-                                    {company.jobs.slice(0, 4).map((job) => (
+                                    <h3 className={styles.jobsListTitle}>Open Positions:</h3>
+                                    {company.jobs.slice(0, 3).map((job) => (
                                         <Link
                                             key={job.id}
                                             href={`/jobs/${job.id}`}
@@ -187,27 +193,22 @@ export default function CompaniesPage() {
                                             <div className={styles.jobInfo}>
                                                 <span className={styles.jobTitle}>{job.title}</span>
                                                 <span className={styles.jobMeta}>
-                                                    {job.location} • {job.experienceLevel}+ years
+                                                    {job.location} • {job.experienceLevel}+ years exp • {job.salary}
                                                 </span>
                                             </div>
-                                            <div className={styles.jobRight}>
-                                                <span className={styles.jobSalary}>{job.salary.split(' ')[0]}</span>
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                                </svg>
-                                            </div>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                            </svg>
                                         </Link>
                                     ))}
 
-                                    {company.totalJobs > 4 && (
-                                        <div className={styles.viewAllContainer}>
-                                            <Link
-                                                href={`/jobs?company=${company.name}`}
-                                                className={styles.viewAllLink}
-                                            >
-                                                View all {company.totalJobs} positions →
-                                            </Link>
-                                        </div>
+                                    {company.totalJobs > 3 && (
+                                        <Link
+                                            href={`/jobs`}
+                                            className={styles.viewAllLink}
+                                        >
+                                            View all {company.totalJobs} positions →
+                                        </Link>
                                     )}
                                 </div>
                             </div>
