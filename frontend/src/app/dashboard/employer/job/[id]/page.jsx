@@ -187,14 +187,28 @@ export default function JobApplicantsPage() {
                   <button
                     onClick={() => handleStatusUpdate(app.id, "Accepted")}
                     className={styles.acceptButton}
+                    disabled={updating}
                   >
-                    ✅ Accept
+                    Accept
                   </button>
                   <button
                     onClick={() => handleStatusUpdate(app.id, "Rejected")}
                     className={styles.rejectButton}
+                    disabled={updating}
                   >
-                    ❌ Reject
+                    Reject
+                  </button>
+                </div>
+              )}
+
+              {app.status === "Rejected" && (
+                <div className={styles.actionButtons}>
+                  <button
+                    onClick={() => handleStatusUpdate(app.id, "Pending")}
+                    className={styles.undoButton}
+                    disabled={updating}
+                  >
+                    Undo Rejection
                   </button>
                 </div>
               )}

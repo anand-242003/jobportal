@@ -1,0 +1,161 @@
+.container {
+    min-height: 100vh;
+    background: white;
+}
+
+.hero {
+    background: black;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+    border-bottom: 4px solid black;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 900;
+    margin: 0 0 16px 0;
+    letter-spacing: 2px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.contactInfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 60px;
+}
+
+.infoCard {
+    border: 3px solid black;
+    padding: 32px;
+    background: white;
+}
+
+.infoCard h3 {
+    font-size: 16px;
+    font-weight: 900;
+    margin: 0 0 12px 0;
+    letter-spacing: 1px;
+}
+
+.infoCard p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+}
+
+.formContainer {
+    border: 3px solid black;
+    padding: 48px;
+    background: white;
+}
+
+.formContainer h2 {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 0 0 32px 0;
+    letter-spacing: 1px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.formGroup label {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.formGroup input,
+.formGroup textarea {
+    border: 2px solid black;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-family: inherit;
+    background: white;
+    transition: all 0.2s;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+    outline: none;
+    border-color: #FFD700;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+}
+
+.formGroup textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.submitBtn {
+    background: black;
+    color: white;
+    border: 3px solid black;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+}
+
+.submitBtn:hover {
+    background: #FFD700;
+    color: black;
+    border-color: black;
+}
+
+.successMessage {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.successMessage h3 {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0 0 16px 0;
+    color: #2ecc71;
+}
+
+.successMessage p {
+    font-size: 18px;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 36px;
+    }
+    
+    .formContainer {
+        padding: 32px 24px;
+    }
+    
+    .contactInfo {
+        grid-template-columns: 1fr;
+    }
+}

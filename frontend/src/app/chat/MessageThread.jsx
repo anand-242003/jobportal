@@ -31,11 +31,16 @@ export default function MessageThread() {
 
     useEffect(() => {
         if (activeConversation) {
-            // Join conversation and mark as read
             joinConversation(activeConversation.id);
             markAsRead(activeConversation.id);
         }
     }, [activeConversation, markAsRead, joinConversation]);
+
+    useEffect(() => {
+        if (conversationMessages.length > 0) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [conversationMessages.length]);
 
     const handleInputChange = (e) => {
         setMessageInput(e.target.value);
@@ -100,11 +105,14 @@ export default function MessageThread() {
             .slice(0, 2) || '??';
     };
 
+    const renderMessageContent = (content) => {
+        return content;
+    };
+
     const isTypingNow = typingUsers[activeConversation?.id] === activeConversation?.otherUser.id;
 
     return (
         <div className={styles.messageThread}>
-            {/* Chat Header */}
             <div className={styles.chatHeader}>
                 <div className={styles.avatar}>
                     <div className={styles.avatarCircle}>
@@ -115,8 +123,9 @@ export default function MessageThread() {
                     <div className={styles.userName}>
                         {activeConversation.otherUser.fullName}
                     </div>
-                    <div style={{ fontSize: "12px", color: "#718096" }}>
+                    <div className={styles.userStatus}>
                         <span className={styles.roleTag}>{activeConversation.otherUser.role}</span>
+                        {isTypingNow && <span className={styles.typingText}>typing...</span>}
                     </div>
                 </div>
             </div>
@@ -129,23 +138,43 @@ export default function MessageThread() {
                         <p>Send a message to begin your discussion with {activeConversation.otherUser.fullName}</p>
                     </div>
                 ) : (
-                    conversationMessages.map((message) => {
+                    conversationMessages.map((message, index) => {
                         const isSent = message.senderId === user.id;
+                        const prevMessage = conversationMessages[index - 1];
+                        const showDate = !prevMessage || 
+                            new Date(message.createdAt).toDateString() !== new Date(prevMessage.createdAt).toDateString();
+                        
                         return (
-                            <div
-                                key={message.id}
-                                className={`${styles.messageGroup} ${isSent ? styles.sent : styles.received}`}
-                            >
-                                <div className={styles.messageAvatar}>
-                                    {getInitials(message.sender.fullName)}
-                                </div>
-                                <div className={styles.messageContent}>
-                                    <div className={styles.messageBubble}>
-                                        {message.content}
+                            <div key={message.id}>
+                                {showDate && (
+                                    <div className={styles.dateLabel}>
+                                        {new Date(message.createdAt).toLocaleDateString('en-US', { 
+                                            weekday: 'long', 
+                                            year: 'numeric', 
+                                            month: 'long', 
+                                            day: 'numeric' 
+                                        })}
                                     </div>
-                                    <div className={styles.messageTime}>
-                                        {formatTime(message.createdAt)}
+                                )}
+                                <div className={`${styles.messageGroup} ${isSent ? styles.sent : styles.received}`}>
+                                    {!isSent && (
+                                        <div className={styles.messageAvatar}>
+                                            {getInitials(message.sender.fullName)}
+                                        </div>
+                                    )}
+                                    <div className={styles.messageContent}>
+                                        <div className={styles.messageBubble}>
+                                            {renderMessageContent(message.content)}
+                                        </div>
+                                        <div className={styles.messageTime}>
+                                            {formatTime(message.createdAt)}
+                                        </div>
                                     </div>
+                                    {isSent && (
+                                        <div className={styles.messageAvatar}>
+                                            {getInitials(message.sender.fullName)}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         );

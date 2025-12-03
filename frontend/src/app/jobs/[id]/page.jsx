@@ -56,13 +56,19 @@ export default function JobDetailsPage() {
       
       try {
         const [appsRes, savedRes] = await Promise.all([
-          axiosInstance.get("/applications/my-applications"),
-          axiosInstance.get(`/saved-jobs/check/${id}`)
+          axiosInstance.get("/applications/my-applications").catch(() => ({ data: [] })),
+          axiosInstance.get(`/saved-jobs/check/${id}`).catch(() => ({ data: { isSaved: false } }))
         ]);
         
-        const alreadyApplied = appsRes.data.some(app => app.jobId === id);
+        const alreadyApplied = appsRes.data.some(app => String(app.jobId) === String(id));
         setHasApplied(alreadyApplied);
         setIsSaved(savedRes.data.isSaved);
+        
+        // Clear any success messages when checking status
+        if (alreadyApplied) {
+          setMsgType("");
+          setMsg("");
+        }
       } catch (error) {
         console.error("Error checking status:", error);
       }
@@ -175,7 +181,7 @@ export default function JobDetailsPage() {
                 disabled={saving}
                 title={isSaved ? "Remove from saved" : "Save job"}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill={isSaved ? "#000000" : "none"} stroke="#000000" strokeWidth="2">
                   <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
@@ -183,9 +189,9 @@ export default function JobDetailsPage() {
                 type="button"
                 className={styles.applyButton}
                 onClick={handleApply}
-                disabled={applying || hasApplied || msgType === "success"}
+                disabled={applying || hasApplied}
               >
-                {applying ? "Applying..." : (hasApplied || msgType === "success") ? "Applied ✓" : "Apply Now"}
+                {applying ? "Applying..." : hasApplied ? "Applied ✓" : "Apply Now"}
               </button>
             </div>
           )}

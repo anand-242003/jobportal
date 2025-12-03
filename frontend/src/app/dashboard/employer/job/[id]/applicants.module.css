@@ -2,6 +2,8 @@
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
+  min-height: 100vh;
+  background: #ffffff;
 }
 
 .header {
@@ -9,57 +11,68 @@
 }
 
 .backLink {
-  color: #0070f3;
+  color: #000000;
   text-decoration: none;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
   display: inline-block;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  border: 2px solid #000000;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  text-transform: uppercase;
 }
 
 .backLink:hover {
-  color: #0051cc;
-  text-decoration: underline;
+  background: #000000;
+  color: #ffffff;
 }
 
 .title {
+  font-family: 'Archivo Black', 'Arial Black', sans-serif;
   font-size: 2rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0.5rem 0;
+  font-weight: 900;
+  color: #000000;
+  margin: 1rem 0;
+  text-transform: uppercase;
 }
 
 .loading {
-  padding: 2rem;
+  padding: 4rem 2rem;
   text-align: center;
   font-size: 1.2rem;
-  color: #666;
+  color: #000000;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .error {
   padding: 1rem;
-  background-color: #ffebee;
-  color: #d32f2f;
-  border-radius: 8px;
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .emptyState {
   text-align: center;
   padding: 3rem;
-  background-color: #f5f5f5;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border: 2px solid #000000;
 }
 
 .emptyState p {
   font-size: 1.1rem;
-  color: #666;
+  color: #000000;
   margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .emptySubtext {
-  font-size: 0.9rem;
-  color: #999;
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
 .applicantsList {
@@ -69,11 +82,14 @@
 }
 
 .applicantCard {
-  border: 1px solid #e0e0e0;
+  border: 2px solid #000000;
   padding: 1.5rem;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  transition: all 0.2s;
+}
+
+.applicantCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .applicantHeader {
@@ -82,36 +98,40 @@
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 2px solid #000000;
 }
 
 .applicantName {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #333;
+  font-family: 'Archivo Black', 'Arial Black', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #000000;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 2px solid #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .statusPending {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: #fbbf24;
+  color: #000000;
 }
 
 .statusAccepted {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #10b981;
+  color: #ffffff;
 }
 
 .statusRejected {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .applicantInfo {
@@ -127,22 +147,24 @@
 }
 
 .label {
-  font-weight: 600;
-  color: #666;
-  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000000;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .emailLink,
 .phoneLink {
-  color: #0070f3;
-  text-decoration: none;
-  transition: color 0.2s;
+  color: #000000;
+  text-decoration: underline;
+  transition: all 0.2s;
+  font-weight: 700;
 }
 
 .emailLink:hover,
 .phoneLink:hover {
-  color: #0051cc;
-  text-decoration: underline;
+  color: #fbbf24;
 }
 
 .skillsList {
@@ -153,34 +175,38 @@
 }
 
 .skillTag {
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: #ffffff;
+  color: #000000;
   padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  border: 2px solid #000000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .bio {
-  color: #666;
+  color: #000000;
   line-height: 1.6;
   margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
 }
 
 .resumeLink {
-  color: #0070f3;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
+  color: #000000;
+  text-decoration: underline;
+  font-weight: 700;
+  transition: all 0.2s;
+  display: inline-block;
 }
 
 .resumeLink:hover {
-  color: #0051cc;
-  text-decoration: underline;
+  color: #fbbf24;
 }
 
 .date {
-  color: #666;
-  font-size: 0.9rem;
+  color: #000000;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .actionButtons {
@@ -188,58 +214,53 @@
   gap: 1rem;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 2px solid #000000;
 }
 
 .acceptButton,
 .rejectButton,
 .chatButton {
   padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border: 2px solid #000000;
+  font-size: 0.875rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
   display: inline-block;
   text-align: center;
+  flex: 1;
+  text-transform: uppercase;
 }
 
 .acceptButton {
-  background-color: #4caf50;
-  color: white;
-  flex: 1;
+  background-color: #10b981;
+  color: #ffffff;
 }
 
 .acceptButton:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+  background-color: #000000;
+  color: #10b981;
 }
 
 .rejectButton {
-  background-color: #f44336;
-  color: white;
-  flex: 1;
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .rejectButton:hover {
-  background-color: #da190b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+  background-color: #000000;
+  color: #ef4444;
 }
 
 .chatButton {
-  background-color: #2196f3;
-  color: white;
-  flex: 1;
+  background-color: #fbbf24;
+  color: #000000;
 }
 
 .chatButton:hover {
-  background-color: #0b7dda;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+  background-color: #000000;
+  color: #fbbf24;
 }
 
 .acceptButton:disabled,
@@ -247,4 +268,51 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .applicantHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+
+.undoButton {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #000000;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  flex: 1;
+  text-transform: uppercase;
+  background-color: #fbbf24;
+  color: #000000;
+}
+
+.undoButton:hover {
+  background-color: #000000;
+  color: #fbbf24;
+}
+
+.undoButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

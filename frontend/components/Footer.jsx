@@ -9,49 +9,47 @@ export default function Footer() {
             <div className={styles.container}>
                 <div className={styles.grid}>
                     <div className={styles.column}>
-                        <div className={styles.logo}>
-                            <div className={styles.logoContainer}>
-                              
-                            </div>
-                        </div>
-                        <p className={styles.description}>
-                            Find your next step. Connecting talented individuals with amazing opportunities.
-                        </p>
-                    </div>
-
-                    <div className={styles.column}>
-                        <h4 className={styles.columnTitle}>Quick Links</h4>
+                        <h4 className={styles.columnTitle}>FOR JOB SEEKERS</h4>
                         <ul className={styles.linkList}>
                             <li><Link href="/jobs">Browse Jobs</Link></li>
-                            <li><Link href="/companies">Companies</Link></li>
-                            <li><Link href="/auth/signup">Sign Up</Link></li>
-                            <li><Link href="/auth/login">Sign In</Link></li>
+                            <li><Link href="/auth/signup">Create Account</Link></li>
+                            <li><Link href="/applications">My Applications</Link></li>
                         </ul>
                     </div>
 
                     <div className={styles.column}>
-                        <h4 className={styles.columnTitle}>For Employers</h4>
+                        <h4 className={styles.columnTitle}>FOR EMPLOYERS</h4>
                         <ul className={styles.linkList}>
                             <li><Link href="/jobs/post">Post a Job</Link></li>
-                            <li><Link href="/dashboard">Dashboard</Link></li>
+                            <li><Link href="/auth/signup?role=Employer">Create Account</Link></li>
+                            <li><Link href="/dashboard/employer">Dashboard</Link></li>
                         </ul>
                     </div>
 
                     <div className={styles.column}>
-                        <h4 className={styles.columnTitle}>Contact</h4>
+                        <h4 className={styles.columnTitle}>COMPANY</h4>
                         <ul className={styles.linkList}>
-                            <li>Email: contact@jobportal.com</li>
-                            <li>Phone: +91 1234567890</li>
-                            <li>Location: India</li>
+                            <li><Link href="/about">About Us</Link></li>
+                            <li><Link href="/contact">Contact</Link></li>
+                            <li><Link href="/terms">Terms</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className={styles.column}>
+                        <h4 className={styles.columnTitle}>CONNECT</h4>
+                        <ul className={styles.linkList}>
+                            <li><Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</Link></li>
+                            <li><Link href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</Link></li>
+                            <li><Link href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</Link></li>
                         </ul>
                     </div>
                 </div>
 
                 <div className={styles.bottom}>
-                    <p>© 2024 JobPortal. All rights reserved.</p>
+                    <p>© 2024 JOBPORTAL. ALL RIGHTS RESERVED.</p>
                     <div className={styles.bottomLinks}>
-                        <Link href="#">Privacy Policy</Link>
-                        <Link href="#">Terms of Service</Link>
+                        <Link href="#">PRIVACY POLICY</Link>
+                        <Link href="#">TERMS OF SERVICE</Link>
                     </div>
                 </div>
             </div>

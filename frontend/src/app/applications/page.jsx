@@ -4,15 +4,24 @@ import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axiosInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/userContext";
 import styles from "./applications.module.css";
 
 export default function ApplicationsPage() {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [withdrawing, setWithdrawing] = useState(false);
+    const [filter, setFilter] = useState("all"); // all, pending, accepted, rejected
     const router = useRouter();
+    const { user } = useUser();
 
     useEffect(() => {
+        // Check if user is authenticated
+        if (!user) {
+            router.push("/auth/login");
+            return;
+        }
+
         const fetchApplications = async () => {
             try {
                 const res = await axiosInstance.get("/applications/my-applications");
@@ -28,7 +37,7 @@ export default function ApplicationsPage() {
         };
 
         fetchApplications();
-    }, [router]);
+    }, [router, user]);
 
     const handleWithdraw = async (applicationId) => {
         if (!confirm("Are you sure you want to withdraw this application?")) {
@@ -48,7 +57,7 @@ export default function ApplicationsPage() {
         }
     };
 
-    if (loading) {
+    if (loading || !user) {
         return (
             <div className={styles.loadingContainer}>
                 <div className={styles.spinner}></div>
@@ -81,8 +90,38 @@ export default function ApplicationsPage() {
                         </Link>
                     </div>
                 ) : (
-                    <div className={styles.applicationsGrid}>
-                        {applications.map((app, index) => (
+                    <>
+                        <div className={styles.filterTabs}>
+                            <button 
+                                className={`${styles.filterTab} ${filter === "all" ? styles.activeTab : ""}`}
+                                onClick={() => setFilter("all")}
+                            >
+                                All ({applications.length})
+                            </button>
+                            <button 
+                                className={`${styles.filterTab} ${filter === "pending" ? styles.activeTab : ""}`}
+                                onClick={() => setFilter("pending")}
+                            >
+                                Pending ({applications.filter(a => a.status === "Pending").length})
+                            </button>
+                            <button 
+                                className={`${styles.filterTab} ${filter === "accepted" ? styles.activeTab : ""}`}
+                                onClick={() => setFilter("accepted")}
+                            >
+                                Accepted ({applications.filter(a => a.status === "Accepted").length})
+                            </button>
+                            <button 
+                                className={`${styles.filterTab} ${filter === "rejected" ? styles.activeTab : ""}`}
+                                onClick={() => setFilter("rejected")}
+                            >
+                                Rejected ({applications.filter(a => a.status === "Rejected").length})
+                            </button>
+                        </div>
+
+                        <div className={styles.applicationsGrid}>
+                        {applications
+                            .filter(app => filter === "all" || app.status?.toLowerCase() === filter)
+                            .map((app, index) => (
                             <motion.div
                                 key={app.id}
                                 className={styles.appCard}
@@ -98,34 +137,38 @@ export default function ApplicationsPage() {
                                     </span>
                                 </div>
 
-                                <div className={styles.cardMeta}>
-                                    <span className={styles.metaItem}>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        {app.job?.created_by?.fullName || "Company"}
-                                    </span>
-                                    <span className={styles.metaItem}>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        {app.job?.location || "Location"}
-                                    </span>
-                                    <span className={styles.metaItem}>
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
-                                        {new Date(app.createdAt).toLocaleDateString()}
-                                    </span>
+                                <div className={styles.companyInfo}>
+                                    <span className={styles.companyName}>{app.job?.created_by?.fullName || "Company"}</span>
+                                </div>
+
+                                <div className={styles.jobInfo}>
+                                    <div className={styles.infoItem}>
+                                        <span className={styles.infoLabel}>Location</span>
+                                        <span className={styles.infoValue}>{app.job?.location || "N/A"}</span>
+                                    </div>
+                                    <div className={styles.infoItem}>
+                                        <span className={styles.infoLabel}>Job Type</span>
+                                        <span className={styles.infoValue}>{app.job?.jobType || "N/A"}</span>
+                                    </div>
+                                    <div className={styles.infoItem}>
+                                        <span className={styles.infoLabel}>Salary</span>
+                                        <span className={styles.infoValue}>{app.job?.salary || "N/A"}</span>
+                                    </div>
+                                    <div className={styles.infoItem}>
+                                        <span className={styles.infoLabel}>Applied On</span>
+                                        <span className={styles.infoValue}>{new Date(app.createdAt).toLocaleDateString()}</span>
+                                    </div>
                                 </div>
 
                                 {app.status === "Rejected" && (
                                     <div className={styles.rejectionMessage}>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                            <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                        </svg>
                                         <p>Unfortunately, your application was not selected for this position. Keep applying to other opportunities!</p>
+                                    </div>
+                                )}
+
+                                {app.status === "Accepted" && (
+                                    <div className={styles.acceptedMessage}>
+                                        <p>Congratulations! Your application has been accepted. The employer may contact you soon.</p>
                                     </div>
                                 )}
 
@@ -153,7 +196,8 @@ export default function ApplicationsPage() {
                                 </div>
                             </motion.div>
                         ))}
-                    </div>
+                        </div>
+                    </>
                 )}
             </div>
         </main>

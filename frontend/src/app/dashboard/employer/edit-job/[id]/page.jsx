@@ -36,7 +36,6 @@ export default function EditJobPage() {
       try {
         const { data } = await axiosInstance.get(`/jobs/${params.id}`);
         
-        // Check if user owns this job
         if (data.createdById !== user?.id) {
           setError("You don't have permission to edit this job");
           return;

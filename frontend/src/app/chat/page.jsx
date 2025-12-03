@@ -26,7 +26,6 @@ function ChatContent() {
         const jobId = searchParams.get('jobId');
 
         if (user && userId) {
-            // Only create conversation if we don't already have it active
             if (!activeConversation || activeConversation.otherUser.id !== parseInt(userId)) {
                 const params = {};
                 if (applicationId) params.applicationId = applicationId;
@@ -35,7 +34,6 @@ function ChatContent() {
                 getOrCreateConversation(userId, params)
                     .then(conversation => {
                         setActiveConversation(conversation);
-                        // Clean up URL params after opening conversation
                         router.replace('/chat', { scroll: false });
                     })
                     .catch(error => {
@@ -68,35 +66,6 @@ function ChatContent() {
                     </div>
                 )}
             </div>
-            
-            {/* Connection Status Indicator */}
-            {!isConnected && (
-                <div className={styles.connectionIndicator} style={{ 
-                    position: 'fixed', 
-                    bottom: '20px', 
-                    right: '20px',
-                    padding: '12px 20px',
-                    background: 'rgba(239, 68, 68, 0.95)',
-                    color: 'white',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-                    zIndex: 1000,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                }}>
-                    <span style={{ 
-                        width: '8px', 
-                        height: '8px', 
-                        borderRadius: '50%', 
-                        background: 'white',
-                        animation: 'pulse 2s infinite'
-                    }}></span>
-                    Connecting to chat server...
-                </div>
-            )}
         </>
     );
 }

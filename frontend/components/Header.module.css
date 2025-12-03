@@ -1,202 +1,98 @@
 .header {
-  background: var(--bg-card);
-  box-shadow: var(--shadow-soft);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-black);
   position: sticky;
   top: 0;
-  z-index: 100;
-  border-bottom: 2px solid var(--bg-light-blue);
+  z-index: 1000;
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  /* padding: 1rem 2rem; */
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  height: 60px;
 }
 
 .logoWrapper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   text-decoration: none;
-  transition: var(--transition);
+  color: var(--color-black);
 }
 
-
-
-.logoContainer {
-  position: relative;
+.logoText {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  /* background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.05)); */
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
+  flex-direction: column;
 }
 
-
-
-.logoIcon {
-  width: 48px;
-  height: 48px;
-  /* background: linear-gradient(135deg, var(--primary), var(--accent)); */
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
+.logoTitle {
+  font-family: var(--font-heading);
   font-size: 1.25rem;
-  color: white;
-}
-
-.logoImage {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  transition: var(--transition);
-}
-
-
-
-.logoText h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
   margin: 0;
-}
-
-.brandSpan {
-  color: var(--accent);
-}
-
-.logoText p {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin: 0;
-  font-weight: 500;
-}
-
-.tagline {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  color: var(--color-black);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .navLink {
-  color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: var(--transition);
-  padding: 0.5rem 0;
-  position: relative;
-}
-
-.navLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: width 0.3s ease;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-black);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color var(--transition-speed);
 }
 
 .navLink:hover {
-  color: var(--accent);
-}
-
-.navLink:hover::after {
-  width: 100%;
-}
-
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  background: var(--bg-light-blue);
-  border-radius: 50px;
-  border: 1px solid rgba(var(--primary-rgb), 0.1);
-}
-
-.avatar {
-  border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.welcome {
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-  padding-right: 0.5rem;
+  color: var(--color-gray-600);
 }
 
 .navButton {
-  background: transparent;
-  color: var(--accent);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-  font-size: 0.85rem;
+  padding: 0.5rem 1.5rem;
+  background: var(--color-yellow);
+  color: var(--color-black);
+  border: 1px solid var(--color-black);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-speed);
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .navButton:hover {
-  background: rgba(var(--primary-rgb), 0.1);
-  color: var(--primary);
-  border-color: var(--primary);
-}
-
-.themeToggle {
-  background: transparent;
-  border: 1px solid rgba(var(--primary-rgb), 0.3);
-  border-radius: var(--radius-sm);
-  padding: 0.5rem 0.8rem;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.themeToggle:hover {
-  background: rgba(var(--primary-rgb), 0.1);
-  transform: scale(1.1);
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .logoutButton {
-  background: transparent;
-  color: var(--text-secondary);
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(var(--primary-rgb), 0.3);
-  border-radius: var(--radius-sm);
+  padding: 0.5rem 1.5rem;
+  background: var(--color-white);
+  color: var(--color-black);
+  border: 1px solid var(--color-black);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-speed);
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  transition: var(--transition);
 }
 
 .logoutButton:hover {
-  background: rgba(var(--danger-rgb), 0.1);
-  color: var(--danger);
-  border-color: var(--danger);
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .logoutButton:disabled {
@@ -204,10 +100,11 @@
   cursor: not-allowed;
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .container {
+    height: auto;
     padding: 1rem;
+    flex-wrap: wrap;
   }
 
   .nav {
@@ -215,18 +112,7 @@
     flex-wrap: wrap;
   }
 
-  .navLink,
-  .welcome {
-    font-size: 0.85rem;
-  }
-
-  .logoText h2 {
-    font-size: 1.25rem;
-  }
-
-  .logoIcon {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+  .navLink {
+    font-size: 0.7rem;
   }
 }

@@ -1,7 +1,7 @@
 import { UserProvider } from "../context/userContext";
 import { ThemeProvider } from "../context/themeContext";
 import { ChatProvider } from "../context/chatContext";
-import ConditionalHeader from "../../components/ConditionalHeader";
+import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import "./globals.css";
 
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <UserProvider>
             <ChatProvider>
-              <ConditionalHeader />
+              <Header />
               {children}
               <Footer />
             </ChatProvider>

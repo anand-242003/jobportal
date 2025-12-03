@@ -33,66 +33,54 @@ export default function Header() {
       <div className={styles.container}>
 
         <Link href="/" className={styles.logoWrapper}>
-          <div className={styles.logoContainer}>
-            <Image
-              src="/job.png"
-              alt="JobPortal Logo"
-              width={65}
-              height={65}
-              className={styles.logoImage}
-              priority
-              unoptimized
-            />
-          </div>
           <div className={styles.logoText}>
-            <p className={styles.tagline}>Find your next step</p>
+            <h2 className={styles.logoTitle}>JOBPORTAL</h2>
           </div>
         </Link>
 
         <nav className={styles.nav}>
           <Link href="/" className={styles.navLink}>
-            Home
+            HOME
           </Link>
-
+          
           {loading ? null : (
             user ? (
               <>
-                {/* Employer Navigation */}
                 {user.role === "Employer" && (
                   <>
                     <Link href="/jobs/post" className={styles.navLink}>
-                      Post a Job
+                      POST JOB
                     </Link>
                   </>
                 )}
 
-                {/* Job Seeker Navigation */}
                 {(user.role === "Student" || user.role === "Seeker") && (
                   <>
                     <Link href="/jobs" className={styles.navLink}>
-                      Find Jobs
+                      FIND JOBS
                     </Link>
                     <Link href="/applications" className={styles.navLink}>
-                      My Applications
+                      APPLICATIONS
                     </Link>
                   </>
                 )}
 
                 <Link href="/chat" className={styles.navLink} style={{ position: "relative" }}>
-                  Messages
+                  MESSAGES
                   {totalUnreadCount > 0 && (
                     <span style={{
                       position: "absolute",
                       top: "-4px",
                       right: "-8px",
-                      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      color: "white",
-                      borderRadius: "10px",
+                      background: "#fbbf24",
+                      color: "black",
+                      borderRadius: "0",
                       padding: "2px 6px",
                       fontSize: "10px",
                       fontWeight: "700",
                       minWidth: "18px",
-                      textAlign: "center"
+                      textAlign: "center",
+                      border: "1px solid black"
                     }}>
                       {totalUnreadCount > 99 ? "99+" : totalUnreadCount}
                     </span>
@@ -100,45 +88,27 @@ export default function Header() {
                 </Link>
 
                 <Link href={user.role === "Employer" ? "/dashboard/employer" : "/dashboard"} className={styles.navLink}>
-                  Dashboard
+                  DASHBOARD
                 </Link>
-
-                <div className={styles.userProfile}>
-                  <Image
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random&color=fff&size=128`}
-                    alt={user.fullName}
-                    width={32}
-                    height={32}
-                    className={styles.avatar}
-                    unoptimized
-                  />
-                  <span className={styles.welcome}>
-                    {user.fullName}
-                  </span>
-                </div>
-
-                <button onClick={toggleTheme} className={styles.themeToggle} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-                  {theme === 'light' ? '🌙' : '☀️'}
-                </button>
 
                 <button
                   onClick={handleLogout}
                   className={styles.logoutButton}
                   disabled={loggingOut}
                 >
-                  {loggingOut ? "Logging out..." : "Sign Out"}
+                  {loggingOut ? "LOGGING OUT..." : "SIGN OUT"}
                 </button>
               </>
             ) : (
               <>
                 <Link href="/jobs" className={styles.navLink}>
-                  Jobs
+                  FIND JOBS
                 </Link>
                 <Link href="/auth/login" className={styles.navLink}>
-                  Sign In
+                  SIGN IN
                 </Link>
                 <Link href="/auth/signup" className={styles.navButton}>
-                  Sign Up
+                  SIGN UP
                 </Link>
               </>
             )

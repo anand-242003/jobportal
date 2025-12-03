@@ -2,6 +2,8 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
+  min-height: 100vh;
+  background: white;
 }
 
 .header {
@@ -9,55 +11,66 @@
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 3px solid black;
 }
 
 .backButton {
-  padding: 0.5rem 1rem;
-  background: transparent;
-  border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  border: 3px solid black;
   cursor: pointer;
   transition: all 0.2s;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
 }
 
 .backButton:hover {
-  background: var(--hover-bg, #f3f4f6);
+  background: black;
+  color: white;
 }
 
 .title {
   font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-primary, #111827);
+  font-weight: 900;
+  color: black;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .loading {
   text-align: center;
   padding: 3rem;
   font-size: 1.1rem;
-  color: var(--text-secondary, #6b7280);
+  color: #333;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .error {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 1rem;
-  border-radius: 8px;
+  background: white;
+  color: #dc2626;
+  padding: 1.5rem;
+  border: 3px solid #dc2626;
   margin-bottom: 1.5rem;
+  font-weight: 700;
 }
 
 .errorMessage {
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 1rem;
-  border-radius: 8px;
+  background: white;
+  color: #dc2626;
+  padding: 1.5rem;
+  border: 3px solid #dc2626;
   margin-bottom: 1.5rem;
+  font-weight: 700;
 }
 
 .form {
-  background: var(--card-bg, white);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 2.5rem;
+  border: 3px solid black;
 }
 
 .formGroup {
@@ -67,37 +80,43 @@
 
 .formGroup label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--text-primary, #111827);
+  margin-bottom: 0.75rem;
+  font-weight: 900;
+  color: black;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .formGroup input,
 .formGroup textarea,
 .formGroup select {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  border: 2px solid black;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  background: white;
+  font-family: inherit;
 }
 
 .formGroup input:focus,
 .formGroup textarea:focus,
 .formGroup select:focus {
   outline: none;
-  border-color: var(--primary-color, #3b82f6);
+  border-color: #FFD700;
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
 }
 
 .formGroup textarea {
   resize: vertical;
   font-family: inherit;
+  line-height: 1.6;
 }
 
 .formRow {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -106,37 +125,43 @@
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color, #e5e7eb);
+  padding-top: 2rem;
+  border-top: 3px solid black;
 }
 
 .cancelButton {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 1rem 2rem;
+  background: white;
+  border: 3px solid black;
+  font-weight: 900;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .cancelButton:hover:not(:disabled) {
-  background: var(--hover-bg, #f3f4f6);
+  background: black;
+  color: white;
 }
 
 .submitButton {
-  padding: 0.75rem 2rem;
-  background: var(--primary-color, #3b82f6);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 1rem 2.5rem;
+  background: #FFD700;
+  color: black;
+  border: 3px solid black;
+  font-weight: 900;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .submitButton:hover:not(:disabled) {
-  background: var(--primary-hover, #2563eb);
+  background: black;
+  color: #FFD700;
 }
 
 .submitButton:disabled,

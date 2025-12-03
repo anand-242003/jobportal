@@ -69,7 +69,10 @@ export default function EmployerDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Employer Dashboard</h1>
+        <div>
+          <h1 className={styles.title}>Employer Dashboard</h1>
+          <p className={styles.welcomeText}>Welcome back, {user.fullName}</p>
+        </div>
         <Link href="/jobs/post" className={styles.postButton}>Post New Job</Link>
       </div>
 

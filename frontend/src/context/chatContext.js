@@ -29,7 +29,7 @@ export function ChatProvider({ children }) {
                     setIsConnected(false);
                 });
 
-                socket.on("new_message", ({ message, conversationId }) => {
+                const handleNewMessage = ({ message, conversationId }) => {
                     console.log("Received new_message event:", message);
                     
                     setMessages(prev => {
@@ -59,7 +59,10 @@ export function ChatProvider({ children }) {
                             [conversationId]: (prev[conversationId] || 0) + 1
                         }));
                     }
-                });
+                };
+
+                socket.on("new_message", handleNewMessage);
+                socket.on("new_message_notification", handleNewMessage);
 
                 socket.on("user_typing", ({ userId, conversationId }) => {
                     setTypingUsers(prev => ({

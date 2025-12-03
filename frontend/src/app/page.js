@@ -1,21 +1,24 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axiosInstance";
-import styles from "./page.module.css";
 import { useUser } from "@/context/userContext";
+import styles from "./page.module.css";
 
 export default function HomePage() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [featuredJobs, setFeaturedJobs] = useState([]);
     const { user } = useUser();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [location, setLocation] = useState("");
+    const [featuredJobs, setFeaturedJobs] = useState([]);
+    const [stats, setStats] = useState({
+        applicationsCount: 0,
+        savedJobsCount: 0
+    });
 
     useEffect(() => {
-
         const fetchJobs = async () => {
             try {
-                const res = await axiosInstance.get("/jobs?limit=6");
+                const res = await axiosInstance.get("/jobs?limit=3");
                 setFeaturedJobs(res.data.jobs || []);
             } catch (error) {
                 console.error("Failed to fetch jobs:", error);
@@ -24,284 +27,223 @@ export default function HomePage() {
         fetchJobs();
     }, []);
 
+    useEffect(() => {
+        const fetchUserStats = async () => {
+            if (!user || user.role !== "Student") return;
+            
+            try {
+                const [appsRes, savedRes] = await Promise.all([
+                    axiosInstance.get("/applications/my-applications").catch(() => ({ data: [] })),
+                    axiosInstance.get("/saved-jobs/my-saved-jobs").catch(() => ({ data: [] }))
+                ]);
+                
+                setStats({
+                    applicationsCount: appsRes.data.length || 0,
+                    savedJobsCount: savedRes.data.length || 0
+                });
+            } catch (error) {
+                console.error("Failed to fetch user stats:", error);
+            }
+        };
+
+        fetchUserStats();
+    }, [user]);
+
     return (
-        <main className={styles.container}>
-
-            <section className={styles.hero}>
-                <motion.div
-                    className={styles.heroContent}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <h1 className={styles.heroTitle}>
-                        Find Your <span className={styles.highlight}>Dream Job</span>
-                    </h1>
-                    <p className={styles.heroSubtitle}>
-                        Discover opportunities that match your skills and passion
-                    </p>
-
-
-                    <div className={styles.searchContainer}>
-                        <div className={styles.searchBar}>
-                            <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                            </svg>
-                            <input
-                                type="text"
-                                placeholder="Search jobs, companies, or skills..."
-                                className={styles.searchInput}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <Link href="/jobs" className={styles.searchButton}>
-                                Search
-                            </Link>
+        <div>
+            <section className={styles.heroSection}>
+                <div className={styles.heroContainer}>
+                    <div className={styles.heroGrid}>
+                        <div>
+                            <h1 className={styles.heroTitle}>
+                                FIND YOUR<br />DREAM JOB
+                            </h1>
+                            <p className={styles.heroText}>
+                                Connect with top employers. Browse thousands of opportunities. Land your next role with confidence.
+                            </p>
+                            <div className={styles.heroButtons}>
+                                <Link href="/jobs">
+                                    <button className={styles.btnPrimary}>BROWSE JOBS</button>
+                                </Link>
+                                {!user && (
+                                    <Link href="/auth/signup">
+                                        <button className={styles.btnSecondary}>SIGN UP FREE</button>
+                                    </Link>
+                                )}
+                                {user && user.role === "Employer" && (
+                                    <Link href="/jobs/post">
+                                        <button className={styles.btnSecondary}>POST A JOB</button>
+                                    </Link>
+                                )}
+                                {user && user.role === "Student" && (
+                                    <Link href="/applications">
+                                        <button className={styles.btnSecondary}>MY APPLICATIONS</button>
+                                    </Link>
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-
-                    <div className={styles.statsGrid}>
-                        <motion.div
-                            className={styles.statCard}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <div className={styles.statNumber}>10K+</div>
-                            <div className={styles.statLabel}>Active Jobs</div>
-                        </motion.div>
-                        <motion.div
-                            className={styles.statCard}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <div className={styles.statNumber}>5K+</div>
-                            <div className={styles.statLabel}>Companies</div>
-                        </motion.div>
-                        <motion.div
-                            className={styles.statCard}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <div className={styles.statNumber}>50K+</div>
-                            <div className={styles.statLabel}>Hired</div>
-                        </motion.div>
-                    </div>
-
-
-                    <div className={styles.ctaGroup}>
-                        <Link href="/jobs" className={styles.ctaPrimary}>
-                            Explore Jobs →
-                        </Link>
-                        {user ? (
-                            <Link href={user.role === "Employer" ? "/dashboard/employer" : "/dashboard"} className={styles.ctaSecondary}>
-                                Go to Dashboard
-                            </Link>
+                        {!user ? (
+                            <div className={styles.searchBox}>
+                                <h3 className={styles.searchTitle}>GET STARTED</h3>
+                                <p className={styles.searchSubtitle}>Join thousands of job seekers and employers</p>
+                                <Link href="/auth/login">
+                                    <button className={styles.searchButton}>SIGN IN</button>
+                                </Link>
+                                <Link href="/auth/signup">
+                                    <button className={styles.searchButton} style={{ marginTop: '0.75rem' }}>CREATE ACCOUNT</button>
+                                </Link>
+                                <Link href="/jobs">
+                                    <button className={styles.searchButton} style={{ marginTop: '0.75rem', background: 'white', color: 'black' }}>BROWSE JOBS</button>
+                                </Link>
+                            </div>
+                        ) : user.role === "Student" ? (
+                            <div className={styles.searchBox}>
+                                <h3 className={styles.searchTitle}>YOUR ACTIVITY</h3>
+                                <div className={styles.statsCard}>
+                                    <div className={styles.statItem}>
+                                        <div className={styles.statValue}>{stats.applicationsCount}</div>
+                                        <div className={styles.statLabel}>APPLICATIONS</div>
+                                    </div>
+                                    <div className={styles.statDivider}></div>
+                                    <div className={styles.statItem}>
+                                        <div className={styles.statValue}>{stats.savedJobsCount}</div>
+                                        <div className={styles.statLabel}>SAVED JOBS</div>
+                                    </div>
+                                </div>
+                                <Link href="/applications">
+                                    <button className={styles.searchButton}>VIEW APPLICATIONS</button>
+                                </Link>
+                                <Link href="/saved-jobs">
+                                    <button className={styles.searchButton} style={{ marginTop: '0.75rem' }}>VIEW SAVED JOBS</button>
+                                </Link>
+                            </div>
                         ) : (
-                            <Link href="/auth/signup" className={styles.ctaSecondary}>
-                                Sign Up Free
-                            </Link>
+                            <div className={styles.searchBox}>
+                                <h3 className={styles.searchTitle}>EMPLOYER ACTIONS</h3>
+                                <Link href="/jobs/post">
+                                    <button className={styles.searchButton}>POST NEW JOB</button>
+                                </Link>
+                                <Link href="/dashboard/employer">
+                                    <button className={styles.searchButton} style={{ marginTop: '0.75rem' }}>VIEW DASHBOARD</button>
+                                </Link>
+                                <Link href="/jobs">
+                                    <button className={styles.searchButton} style={{ marginTop: '0.75rem' }}>MY JOB LISTINGS</button>
+                                </Link>
+                            </div>
                         )}
                     </div>
-                </motion.div>
+                </div>
             </section>
 
-
-            {featuredJobs.length > 0 && (
-                <section className={styles.featuredSection}>
-                    <h2 className={styles.sectionTitle}>
-                        <span className={styles.highlight}>Featured</span> Opportunities
-                    </h2>
-
-                    <div className={styles.carouselWrapper}>
-                        <div className={styles.carouselTrack}>
-
-                            {[...featuredJobs, ...featuredJobs].map((job, index) => (
-                                <motion.div
-                                    key={`${job.id}-${index}`}
-                                    className={styles.jobCard}
-                                    whileHover={{ y: -10, scale: 1.05 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <div className={styles.jobHeader}>
-                                        <h3 className={styles.jobTitle}>{job.title}</h3>
-                                        <span className={styles.jobBadge}>{job.jobType}</span>
-                                    </div>
-                                    <p className={styles.jobLocation}>📍 {job.location}</p>
-                                    <p className={styles.jobDescription}>
-                                        {job.description?.slice(0, 100)}...
-                                    </p>
-                                    <div className={styles.jobFooter}>
-                                        <span className={styles.jobSalary}>
-                                            {job.salary || 'Competitive'}
-                                        </span>
-                                        <Link href={`/jobs/${job.id}`} className={styles.applyBtn}>
-                                            View Details →
-                                        </Link>
-                                    </div>
-                                </motion.div>
-                            ))}
+            <section className={styles.section}>
+                <div className={styles.container}>
+                    <h2 className={styles.sectionTitle}>HOW IT WORKS</h2>
+                    <div className={styles.howItWorksGrid}>
+                        <div className={styles.howItWorksCard}>
+                            <div className={styles.howItWorksNumber}>01</div>
+                            <h3 className={styles.howItWorksTitle}>CREATE PROFILE</h3>
+                            <p className={styles.howItWorksText}>
+                                Sign up in seconds. Add your experience, skills, and resume. Get discovered by employers.
+                            </p>
+                        </div>
+                        <div className={styles.howItWorksCardBlack}>
+                            <div className={styles.howItWorksNumber}>02</div>
+                            <h3 className={styles.howItWorksTitle}>APPLY TO JOBS</h3>
+                            <p className={styles.howItWorksText}>
+                                Browse thousands of opportunities. Filter by location, salary, and type. Apply with one click.
+                            </p>
+                        </div>
+                        <div className={styles.howItWorksCard}>
+                            <div className={styles.howItWorksNumber}>03</div>
+                            <h3 className={styles.howItWorksTitle}>GET HIRED</h3>
+                            <p className={styles.howItWorksText}>
+                                Chat directly with employers. Track your applications. Land your dream job.
+                            </p>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div className={styles.viewAllContainer}>
-                        <Link href="/jobs" className={styles.viewAllBtn}>
-                            View All Jobs →
+            <section className={styles.section}>
+                <div className={styles.container}>
+                    <div className={styles.jobsHeader}>
+                        <h2 className={styles.jobsTitle}>FEATURED JOBS</h2>
+                        <Link href="/jobs">
+                            <button className={styles.viewAllButton}>VIEW ALL JOBS</button>
                         </Link>
                     </div>
-                </section>
-            )}
 
-
-            <section className={styles.testimonialsSection}>
-                <h2 className={styles.sectionTitle}>
-                    <span className={styles.highlight}>Trusted</span> By Thousands
-                </h2>
-                <p className={styles.sectionSubtitle}>
-                    See what our users say about their job search experience
-                </p>
-
-                <div className={styles.carouselWrapper}>
-                    <div className={styles.testimonialsTrack}>
-                        {[
-                            {
-                                id: 1,
-                                name: "Priya Sharma",
-                                role: "Software Engineer",
-                                company: "Tech Corp",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=1",
-                                text: "Found my dream job within 2 weeks! The platform is incredibly easy to use and the job recommendations were spot on."
-                            },
-                            {
-                                id: 2,
-                                name: "Rahul Verma",
-                                role: "Product Manager",
-                                company: "StartupXYZ",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=12",
-                                text: "Amazing experience! Got multiple interview calls and landed a role that perfectly matches my skills. Highly recommended!"
-                            },
-                            {
-                                id: 3,
-                                name: "Ananya Patel",
-                                role: "UI/UX Designer",
-                                company: "Creative Studios",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=5",
-                                text: "The best job portal I've used. Professional, responsive, and helped me transition to my ideal role seamlessly."
-                            },
-                            {
-                                id: 4,
-                                name: "Arjun Singh",
-                                role: "Data Scientist",
-                                company: "AI Labs",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=13",
-                                text: "Outstanding platform! The quality of job listings is top-notch and the application process is smooth and efficient."
-                            },
-                            {
-                                id: 5,
-                                name: "Sneha Reddy",
-                                role: "Marketing Manager",
-                                company: "Brand Co",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=9",
-                                text: "Love how easy it is to apply for jobs and track applications. Got my current role through this platform!"
-                            },
-                            {
-                                id: 6,
-                                name: "Vikram Shah",
-                                role: "Full Stack Developer",
-                                company: "Web Solutions",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=15",
-                                text: "Excellent job portal with great opportunities. The interface is clean and finding relevant jobs is a breeze."
-                            }
-                        ].concat([
-                            {
-                                id: 7,
-                                name: "Priya Sharma",
-                                role: "Software Engineer",
-                                company: "Tech Corp",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=1",
-                                text: "Found my dream job within 2 weeks! The platform is incredibly easy to use and the job recommendations were spot on."
-                            },
-                            {
-                                id: 8,
-                                name: "Rahul Verma",
-                                role: "Product Manager",
-                                company: "StartupXYZ",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=12",
-                                text: "Amazing experience! Got multiple interview calls and landed a role that perfectly matches my skills. Highly recommended!"
-                            },
-                            {
-                                id: 9,
-                                name: "Ananya Patel",
-                                role: "UI/UX Designer",
-                                company: "Creative Studios",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=5",
-                                text: "The best job portal I've used. Professional, responsive, and helped me transition to my ideal role seamlessly."
-                            },
-                            {
-                                id: 10,
-                                name: "Arjun Singh",
-                                role: "Data Scientist",
-                                company: "AI Labs",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=13",
-                                text: "Outstanding platform! The quality of job listings is top-notch and the application process is smooth and efficient."
-                            },
-                            {
-                                id: 11,
-                                name: "Sneha Reddy",
-                                role: "Marketing Manager",
-                                company: "Brand Co",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=9",
-                                text: "Love how easy it is to apply for jobs and track applications. Got my current role through this platform!"
-                            },
-                            {
-                                id: 12,
-                                name: "Vikram Shah",
-                                role: "Full Stack Developer",
-                                company: "Web Solutions",
-                                rating: 5,
-                                image: "https://i.pravatar.cc/150?img=15",
-                                text: "Excellent job portal with great opportunities. The interface is clean and finding relevant jobs is a breeze."
-                            }
-                        ]).map((testimonial) => (
-                            <motion.div
-                                key={testimonial.id}
-                                className={styles.testimonialCard}
-                                whileHover={{ y: -5, scale: 1.03 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <div className={styles.testimonialHeader}>
-                                    <img
-                                        src={testimonial.image}
-                                        alt={testimonial.name}
-                                        className={styles.testimonialAvatar}
-                                    />
-                                    <div className={styles.testimonialInfo}>
-                                        <h4 className={styles.testimonialName}>{testimonial.name}</h4>
-                                        <p className={styles.testimonialRole}>{testimonial.role} at {testimonial.company}</p>
-                                    </div>
+                    <div className={styles.jobsGrid}>
+                        {featuredJobs.map((job) => (
+                            <div key={job.id} className={styles.jobCard}>
+                                <h3 className={styles.jobTitle}>{job.title}</h3>
+                                <p className={styles.jobCompany}>{job.employer?.companyName || 'Tech Corp'}</p>
+                                <div className={styles.jobDetails}>
+                                    <p>▪ {job.location}</p>
+                                    <p>▪ {job.salary || '$120k - $150k'}</p>
                                 </div>
-                                <div className={styles.testimonialRating}>
-                                    {[...Array(testimonial.rating)].map((_, i) => (
-                                        <span key={i} className={styles.star}>⭐</span>
-                                    ))}
+                                <div className={styles.jobMeta}>
+                                    <span className={styles.jobType}>{job.jobType}</span>
+                                    <span className={styles.jobDate}>
+                                        {new Date(job.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    </span>
                                 </div>
-                                <p className={styles.testimonialText}>"{testimonial.text}"</p>
-                            </motion.div>
+                                <div className={styles.jobButtons}>
+                                    <Link href={`/jobs/${job.id}`} className={styles.applyButton}>
+                                        APPLY NOW
+                                    </Link>
+                                    <Link href={`/jobs/${job.id}`} className={styles.detailsButton}>
+                                        DETAILS
+                                    </Link>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
             </section>
-        </main>
+
+            <section className={styles.statsSection}>
+                <div className={styles.container}>
+                    <div className={styles.statsGrid}>
+                        <div>
+                            <div className={styles.statNumber}>1000+</div>
+                            <div className={styles.statLabel}>JOBS POSTED</div>
+                        </div>
+                        <div>
+                            <div className={styles.statNumber}>500+</div>
+                            <div className={styles.statLabel}>COMPANIES</div>
+                        </div>
+                        <div>
+                            <div className={styles.statNumber}>2500+</div>
+                            <div className={styles.statLabel}>CANDIDATES</div>
+                        </div>
+                        <div>
+                            <div className={styles.statNumber}>750+</div>
+                            <div className={styles.statLabel}>HIRES MADE</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {!user && (
+                <section className={styles.ctaSection}>
+                    <div className={styles.container}>
+                        <h2 className={styles.ctaTitle}>READY TO GET STARTED?</h2>
+                        <p className={styles.ctaText}>
+                            Join thousands of job seekers and employers finding success on JobPortal.
+                        </p>
+                        <div className={styles.ctaButtons}>
+                            <Link href="/auth/signup?role=Student">
+                                <button className={styles.ctaBtnPrimary}>I'M LOOKING FOR A JOB</button>
+                            </Link>
+                            <Link href="/auth/signup?role=Employer">
+                                <button className={styles.ctaBtnSecondary}>I'M HIRING</button>
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+            )}
+        </div>
     );
 }

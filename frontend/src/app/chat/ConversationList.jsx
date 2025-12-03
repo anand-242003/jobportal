@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useChat } from "@/context/chatContext";
 import { useUser } from "@/context/userContext";
 import styles from "./Chat.module.css";
-import StartConversation from "./StartConversation";
 
 export default function ConversationList() {
     const { user } = useUser();
@@ -61,8 +60,6 @@ export default function ConversationList() {
                 <h2>Messages</h2>
             </div>
 
-            <StartConversation />
-
             <div className={styles.conversationList}>
                 {conversations.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "40px 20px", color: "var(--foreground-muted)" }}>
@@ -84,8 +81,6 @@ export default function ConversationList() {
                                 <div className={styles.avatarCircle}>
                                     {getInitials(conversation.otherUser.fullName)}
                                 </div>
-                                {/* TODO: Add online status */}
-                                {/* <div className={styles.onlineIndicator}></div> */}
                             </div>
                             <div className={styles.conversationInfo}>
                                 <div className={styles.conversationTop}>

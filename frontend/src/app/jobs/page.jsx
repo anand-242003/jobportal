@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axiosInstance from "@/utils/axiosInstance";
+import { useUser } from "@/context/userContext";
 import styles from "./jobs.module.css";
 import Link from "next/link";
 
 export default function JobsPage() {
+  const { user } = useUser();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
@@ -51,13 +53,27 @@ export default function JobsPage() {
         }
       });
 
-      const { data } = await axiosInstance.get("/jobs", { params });
+      // Use my-jobs endpoint for employers to see only their jobs
+      const endpoint = user?.role === "Employer" ? "/jobs/my-jobs" : "/jobs";
+      const { data } = await axiosInstance.get(endpoint, { params });
 
-      if (data.jobs) {
-        setJobs(data.jobs);
-        setPagination(data.pagination);
+      // Handle different response formats
+      if (user?.role === "Employer") {
+        // my-jobs returns array directly
+        setJobs(Array.isArray(data) ? data : []);
+        setPagination({
+          currentPage: 1,
+          totalPages: 1,
+          totalJobs: Array.isArray(data) ? data.length : 0
+        });
       } else {
-        setJobs([]);
+        // regular jobs endpoint returns object with jobs array
+        if (data.jobs) {
+          setJobs(data.jobs);
+          setPagination(data.pagination);
+        } else {
+          setJobs([]);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch jobs", error);
@@ -68,7 +84,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, [debouncedSearch, filters, sort, page]);
+  }, [debouncedSearch, filters, sort, page, user]);
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -96,10 +112,13 @@ export default function JobsPage() {
           transition={{ duration: 0.6 }}
         >
           <h1 className={styles.heroTitle}>
-            Discover Your <span className={styles.highlight}>Next Opportunity</span>
+            {user?.role === "Employer" ? "Your Job Listings" : "Discover Your Next Opportunity"}
           </h1>
           <p className={styles.heroSubtitle}>
-            {pagination.totalJobs || 0} amazing jobs waiting for you
+            {user?.role === "Employer" 
+              ? `${pagination.totalJobs || 0} jobs posted by you`
+              : `${pagination.totalJobs || 0} amazing jobs waiting for you`
+            }
           </p>
         </motion.div>
       </div>

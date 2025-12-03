@@ -84,6 +84,7 @@ export const getAllJobs = async (req, res) => {
         { title: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
         { location: { contains: search, mode: 'insensitive' } },
+        { created_by: { fullName: { contains: search, mode: 'insensitive' } } },
       ];
     }
 

@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axiosInstance from "@/utils/axiosInstance";
 import styles from "./signup.module.css";
 
 export default function SignupPage() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const router = useRouter();
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,7 +22,6 @@ export default function SignupPage() {
     if (/[a-z]/.test(pass) && /[A-Z]/.test(pass)) strength++;
     if (/\d/.test(pass)) strength++;
     if (/[^a-zA-Z\d]/.test(pass)) strength++;
-
     const labels = ["", "Weak", "Fair", "Good", "Strong"];
     return { strength, label: labels[strength] };
   };
@@ -44,37 +41,19 @@ export default function SignupPage() {
 
     try {
       const { confirmPassword, ...signupData } = data;
-
-
-      const signupRes = await axiosInstance.post("/auth/signup", signupData);
-      console.log("Signup successful:", signupRes.data);
-
-
-      const loginRes = await axiosInstance.post("/auth/login", {
+      await axiosInstance.post("/auth/signup", signupData);
+      
+      await axiosInstance.post("/auth/login", {
         email: data.email,
         password: data.password,
       });
-      console.log("Auto-login successful:", loginRes.data);
-
 
       const userRes = await axiosInstance.get("/users/profile");
       const user = userRes.data;
-      console.log("User profile:", user);
 
-
-      const redirectUrl = user.role === "Employer"
-        ? "/dashboard/employer"
-        : "/jobs";
-
-      console.log("Redirecting to:", redirectUrl);
-
-
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, 500);
-
+      const redirectUrl = user.role === "Employer" ? "/dashboard/employer" : "/jobs";
+      window.location.href = redirectUrl;
     } catch (err) {
-      console.error("Signup error:", err);
       setIsError(true);
       setMessage(err.response?.data?.message || "Signup failed. Please try again.");
       setLoading(false);
@@ -89,15 +68,22 @@ export default function SignupPage() {
     <div className={styles.container}>
       <div className={styles.leftPanel}>
         <div className={styles.illustration}>
-          <div className={styles.illustrationContent}>
-            <h2 className={styles.illustrationTitle}>Join Us Today!</h2>
-            <p className={styles.illustrationText}>
-              Create your account and start your journey to finding the perfect job.
-            </p>
-            <div className={styles.features}>
-              <div className={styles.feature}>✓ Free account creation</div>
-              <div className={styles.feature}>✓ Instant job matching</div>
-              <div className={styles.feature}>✓ Career resources</div>
+          <h2 className={styles.illustrationTitle}>Join Us Today!</h2>
+          <p className={styles.illustrationText}>
+            Create your account and start your journey to finding the perfect job.
+          </p>
+          <div className={styles.features}>
+            <div className={styles.feature}>
+              <div className={styles.featureIcon}>✓</div>
+              <span>Free account creation</span>
+            </div>
+            <div className={styles.feature}>
+              <div className={styles.featureIcon}>✓</div>
+              <span>Instant job matching</span>
+            </div>
+            <div className={styles.feature}>
+              <div className={styles.featureIcon}>✓</div>
+              <span>Direct employer contact</span>
             </div>
           </div>
         </div>
@@ -105,8 +91,10 @@ export default function SignupPage() {
 
       <div className={styles.rightPanel}>
         <div className={styles.formContainer}>
-          <h1 className={styles.title}>Sign Up</h1>
-          <p className={styles.subtitle}>Create your account to get started</p>
+          <div>
+            <h1 className={styles.title}>Sign Up</h1>
+            <p className={styles.subtitle}>Create your account to get started</p>
+          </div>
 
           {message && (
             <div className={isError ? styles.errorMessage : styles.successMessage}>
@@ -114,7 +102,10 @@ export default function SignupPage() {
             </div>
           )}
 
-          <button onClick={handleGoogleSignup} className={styles.googleButton}>
+          <button
+            onClick={handleGoogleSignup}
+            className={styles.googleButton}
+          >
             <svg className={styles.googleIcon} viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -125,7 +116,7 @@ export default function SignupPage() {
           </button>
 
           <div className={styles.divider}>
-            <span>or</span>
+            <span>Or</span>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -172,7 +163,7 @@ export default function SignupPage() {
               <label className={styles.label}>Role</label>
               <select
                 {...register("role", { required: "Role is required" })}
-                className={styles.input}
+                className={styles.select}
               >
                 <option value="">Select your role</option>
                 <option value="Student">Job Seeker</option>
@@ -188,10 +179,7 @@ export default function SignupPage() {
                   type={showPassword ? "text" : "password"}
                   {...register("password", {
                     required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters"
-                    }
+                    minLength: { value: 6, message: "Password must be at least 6 characters" }
                   })}
                   className={styles.input}
                   placeholder="••••••••"
@@ -205,7 +193,7 @@ export default function SignupPage() {
                 </button>
               </div>
               {password && (
-                <div className={`${styles.passwordStrength} ${styles[`strength${passwordStrength.strength}`]}`}>
+                <div className={styles.passwordStrength}>
                   <div className={styles.strengthBar}>
                     <div className={styles.strengthFill} style={{ width: `${passwordStrength.strength * 25}%` }}></div>
                   </div>
@@ -240,12 +228,15 @@ export default function SignupPage() {
               className={styles.submitButton}
               disabled={loading}
             >
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
           <p className={styles.footer}>
-            Already have an account? <Link href="/auth/login" className={styles.link}>Sign in</Link>
+            Already have an account?{" "}
+            <Link href="/auth/login" className={styles.link}>
+              Sign In
+            </Link>
           </p>
         </div>
       </div>

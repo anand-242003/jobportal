@@ -1,9 +1,9 @@
-/* Modern Job Details Design */
+/* Brutalist Job Details Design - Matching Home Page */
 .page {
     min-height: 100vh;
-    background-color: var(--bg-soft-white);
+    background-color: #ffffff;
     padding: 2rem 0;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
@@ -17,35 +17,37 @@
     padding: 4rem 2rem;
     text-align: center;
     font-size: 1.1rem;
-    color: #64748b;
-}
-
-[data-theme="dark"] .loading,
-[data-theme="dark"] .error {
-    color: #94a3b8;
+    color: #000000;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .error {
-    color: #ef4444;
+    color: #000000;
+    border: 2px solid #000000;
+    background: #ffffff;
+    padding: 2rem;
 }
 
 .backLink {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #3b82f6;
-    /* Blue-500 */
+    color: #000000;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 2rem;
     transition: all 0.2s;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
+    border: 2px solid #000000;
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    text-transform: uppercase;
 }
 
 .backLink:hover {
-    color: #2563eb;
-    /* Blue-600 */
-    transform: translateX(-4px);
+    background: #000000;
+    color: #ffffff;
 }
 
 /* Card Styles */
@@ -54,21 +56,8 @@
 .section,
 .salaryBox {
     background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border: 2px solid #000000;
     margin-bottom: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="dark"] .jobHeader,
-[data-theme="dark"] .jobMeta,
-[data-theme="dark"] .section,
-[data-theme="dark"] .salaryBox {
-    background-color: #1e293b;
-    /* Slate-800 */
-    border-color: #334155;
-    /* Slate-700 */
-    box-shadow: none;
 }
 
 /* Header Section */
@@ -85,18 +74,13 @@
 }
 
 .jobTitle {
+    font-family: 'Archivo Black', 'Arial Black', sans-serif;
     font-size: 2rem;
-    font-weight: 700;
-    color: #0f172a;
-    /* Slate-900 */
+    font-weight: 900;
+    color: #000000;
     margin: 0 0 0.75rem 0;
     line-height: 1.2;
-    letter-spacing: -0.02em;
-}
-
-[data-theme="dark"] .jobTitle {
-    color: #f8fafc;
-    /* Slate-50 */
+    text-transform: uppercase;
 }
 
 .companyInfo {
@@ -106,55 +90,79 @@
 }
 
 .companyName {
-    font-size: 1.1rem;
-    color: #64748b;
-    /* Slate-500 */
-    font-weight: 500;
+    font-size: 0.875rem;
+    color: #000000;
+    font-weight: 700;
 }
 
-[data-theme="dark"] .companyName {
-    color: #94a3b8;
-    /* Slate-400 */
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
 }
 
-/* Buttons */
+.saveButton {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #000000;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.saveButton svg {
+  color: #000000;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #fbbf24;
+}
+
+.saveButton.saved {
+  background: #fbbf24;
+}
+
+.saveButton.saved:hover {
+  background: #000000;
+}
+
+.saveButton.saved:hover svg {
+  fill: #fbbf24;
+  stroke: #fbbf24;
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .applyButton {
-    padding: 0.875rem 2rem;
-    background-color: #0f172a;
-    /* Slate-900 */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="dark"] .applyButton {
-    background-color: #3b82f6;
-    /* Blue-500 */
+  padding: 0.75rem 2rem;
+  background: #fbbf24;
+  color: #000000;
+  border: 2px solid #000000;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
 }
 
 .applyButton:hover:not(:disabled) {
-    transform: translateY(-2px);
-    background-color: #1e293b;
-    /* Slate-800 */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="dark"] .applyButton:hover:not(:disabled) {
-    background-color: #2563eb;
-    /* Blue-600 */
+  background: #000000;
+  color: #ffffff;
 }
 
 .applyButton:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #9ca3af;
 }
 
 /* Meta Section */
@@ -170,20 +178,13 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    color: #475569;
-    /* Slate-600 */
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-[data-theme="dark"] .metaItem {
-    color: #cbd5e1;
-    /* Slate-300 */
+    color: #000000;
+    font-size: 0.875rem;
+    font-weight: 700;
 }
 
 .metaItem svg {
-    color: #3b82f6;
-    /* Blue-500 */
+    color: #000000;
     flex-shrink: 0;
 }
 
@@ -191,35 +192,23 @@
 .salaryBox {
     padding: 2rem;
     text-align: center;
-    background: linear-gradient(to right, #f8fafc, #ffffff);
-}
-
-[data-theme="dark"] .salaryBox {
-    background: linear-gradient(to right, #1e293b, #0f172a);
+    background: #fbbf24;
 }
 
 .salaryLabel {
-    font-size: 0.9rem;
-    color: #64748b;
+    font-size: 0.75rem;
+    color: #000000;
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-[data-theme="dark"] .salaryLabel {
-    color: #94a3b8;
-}
-
 .salaryAmount {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: -0.02em;
-}
-
-[data-theme="dark"] .salaryAmount {
-    color: #f8fafc;
+    font-family: 'Archivo Black', 'Arial Black', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #000000;
 }
 
 /* Content Sections */
@@ -228,30 +217,21 @@
 }
 
 .sectionTitle {
+    font-family: 'Archivo Black', 'Arial Black', sans-serif;
     font-size: 1.25rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-weight: 900;
+    color: #000000;
     margin: 0 0 1.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-[data-theme="dark"] .sectionTitle {
-    color: #f8fafc;
-    border-color: #334155;
+    border-bottom: 2px solid #000000;
+    text-transform: uppercase;
 }
 
 .description {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: #334155;
-    /* Slate-700 */
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: #000000;
     margin: 0;
-}
-
-[data-theme="dark"] .description {
-    color: #cbd5e1;
-    /* Slate-300 */
 }
 
 /* Requirements List */
@@ -265,101 +245,73 @@
 
 .requirementItem {
     padding: 1rem 1.25rem;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    color: #334155;
-    font-size: 1rem;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    color: #000000;
+    font-size: 0.875rem;
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-}
-
-[data-theme="dark"] .requirementItem {
-    background-color: #0f172a;
-    border-color: #334155;
-    color: #cbd5e1;
+    font-weight: 400;
 }
 
 .requirementItem::before {
     content: "✓";
-    color: #3b82f6;
-    /* Blue-500 */
-    font-weight: 800;
+    color: #000000;
+    font-weight: 700;
     margin-top: 2px;
 }
 
 /* Messages */
 .message {
     padding: 1rem;
-    border-radius: 8px;
     margin-bottom: 1.5rem;
-    font-weight: 500;
+    font-weight: 700;
+    border: 2px solid #000000;
+    font-size: 0.875rem;
 }
 
 .message.success {
-    background-color: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
-}
-
-[data-theme="dark"] .message.success {
-    background-color: rgba(5, 150, 105, 0.2);
-    border-color: rgba(5, 150, 105, 0.3);
-    color: #34d399;
+    background-color: #fbbf24;
+    color: #000000;
 }
 
 .message.error {
-    background-color: #fef2f2;
-    color: #dc2626;
-    border: 1px solid #fecaca;
-}
-
-[data-theme="dark"] .message.error {
-    background-color: rgba(220, 38, 38, 0.2);
-    border-color: rgba(220, 38, 38, 0.3);
-    color: #f87171;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 /* Login Prompt */
 .loginPrompt {
-    background-color: #f8fafc;
+    background-color: #ffffff;
     padding: 3rem;
-    border-radius: 12px;
     text-align: center;
-    border: 1px solid #e2e8f0;
-}
-
-[data-theme="dark"] .loginPrompt {
-    background-color: #1e293b;
-    border-color: #334155;
+    border: 2px solid #000000;
 }
 
 .loginPrompt p {
-    font-size: 1.1rem;
-    color: #64748b;
+    font-size: 1rem;
+    color: #000000;
     margin: 0 0 1.5rem 0;
-}
-
-[data-theme="dark"] .loginPrompt p {
-    color: #94a3b8;
+    font-weight: 400;
 }
 
 .loginButton {
     display: inline-block;
-    padding: 0.875rem 2rem;
-    background-color: #3b82f6;
-    color: white;
+    padding: 0.75rem 2rem;
+    background-color: #fbbf24;
+    color: #000000;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
+    font-weight: 700;
     transition: all 0.2s;
+    border: 2px solid #000000;
+    text-transform: uppercase;
+    font-size: 0.875rem;
 }
 
 .loginButton:hover {
-    background-color: #2563eb;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    background-color: #000000;
+    color: #ffffff;
 }
 
 /* Responsive */
@@ -373,8 +325,12 @@
         padding: 1.5rem;
     }
 
-    .applyButton {
+    .actionButtons {
         width: 100%;
+    }
+
+    .applyButton {
+        flex: 1;
     }
 
     .jobMeta {
@@ -387,77 +343,6 @@
     }
 
     .jobTitle {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
-}
-
-/* Action Buttons */
-.actionButtons {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.saveButton {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid #e2e8f0;
-  background: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.saveButton:hover:not(:disabled) {
-  transform: scale(1.1);
-  border-color: #ef4444;
-}
-
-.saveButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-[data-theme="dark"] .saveButton {
-  background: #1e293b;
-  border-color: #334155;
-}
-
-.applyButton {
-  padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.applyButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-}
-
-.applyButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-@media (max-width: 768px) {
-  .actionButtons {
-    width: 100%;
-  }
-
-  .applyButton {
-    flex: 1;
-  }
 }
