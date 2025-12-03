@@ -4,7 +4,7 @@ A modern, full-featured job portal connecting employers with talented job seeker
 
 ## 🌐 Live Demo
 
-- **Frontend:** [Add your Vercel URL here]
+- **Frontend:** https://jobportal-frontend-navy-xi.vercel.app
 - **Backend API:** https://jobportal-oc40.onrender.com
 
 ## 📋 Features
