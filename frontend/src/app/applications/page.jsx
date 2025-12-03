@@ -9,6 +9,7 @@ import styles from "./applications.module.css";
 export default function ApplicationsPage() {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [withdrawing, setWithdrawing] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -28,6 +29,24 @@ export default function ApplicationsPage() {
 
         fetchApplications();
     }, [router]);
+
+    const handleWithdraw = async (applicationId) => {
+        if (!confirm("Are you sure you want to withdraw this application?")) {
+            return;
+        }
+
+        try {
+            setWithdrawing(true);
+            await axiosInstance.delete(`/applications/${applicationId}`);
+            setApplications(applications.filter(app => app.id !== applicationId));
+            alert("Application withdrawn successfully!");
+        } catch (error) {
+            console.error("Error withdrawing application:", error);
+            alert(error.response?.data?.message || "Failed to withdraw application");
+        } finally {
+            setWithdrawing(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -121,6 +140,15 @@ export default function ApplicationsPage() {
                                         >
                                             Message Employer
                                         </Link>
+                                    )}
+                                    {app.status === "Pending" && (
+                                        <button
+                                            onClick={() => handleWithdraw(app.id)}
+                                            className={styles.withdrawButton}
+                                            disabled={withdrawing}
+                                        >
+                                            Withdraw Application
+                                        </button>
                                     )}
                                 </div>
                             </motion.div>

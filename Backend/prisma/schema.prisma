@@ -25,6 +25,7 @@ model User {
   // Relations
   createdJobs  Job[]         @relation("CreatedJobs")
   applications Application[] // A user can apply to many jobs
+  savedJobs    SavedJob[]    // A user can save many jobs
   
   // Chat relations
   conversationsAsUser1 Conversation[] @relation("UserConversations1")
@@ -51,6 +52,7 @@ model Job {
   createdById String @db.ObjectId
   
   applications Application[] // A job can have many applications
+  savedBy      SavedJob[]    // A job can be saved by many users
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,6 +67,19 @@ model Application {
   applicant   User     @relation(fields: [applicantId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model SavedJob {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  jobId     String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
 }
 
 enum ApplicationStatus {

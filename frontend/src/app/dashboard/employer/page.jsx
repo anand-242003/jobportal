@@ -17,12 +17,31 @@ export default function EmployerDashboard() {
     recentApplications: [],
   });
   const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/auth/login");
     }
   }, [user, loading, router]);
+
+  const handleDeleteJob = async (jobId) => {
+    if (!confirm("Are you sure you want to delete this job? This will also delete all applications.")) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      await axiosInstance.delete(`/jobs/${jobId}`);
+      setJobs(jobs.filter(job => job.id !== jobId));
+      alert("Job deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting job:", error);
+      alert(error.response?.data?.message || "Failed to delete job");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,12 +75,26 @@ export default function EmployerDashboard() {
 
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <h3>Total Jobs Posted</h3>
-          <p className={styles.statValue}>{stats.totalJobs}</p>
+          <div className={styles.statIcon}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className={styles.statContent}>
+            <h3>Total Jobs Posted</h3>
+            <p className={styles.statValue}>{stats.totalJobs}</p>
+          </div>
         </div>
         <div className={styles.statCard}>
-          <h3>Total Applications</h3>
-          <p className={styles.statValue}>{stats.totalApplications}</p>
+          <div className={styles.statIcon}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className={styles.statContent}>
+            <h3>Total Applications</h3>
+            <p className={styles.statValue}>{stats.totalApplications}</p>
+          </div>
         </div>
       </div>
 
@@ -119,6 +152,15 @@ export default function EmployerDashboard() {
                   <Link href={`/jobs/${job.id}`} className={styles.viewJobButton}>
                     View Job
                   </Link>
+                  <Link href={`/dashboard/employer/edit-job/${job.id}`} className={styles.editButton}>
+                    Edit
+                  </Link>
+                  <button 
+                    onClick={() => handleDeleteJob(job.id)} 
+                    className={styles.deleteButton}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}

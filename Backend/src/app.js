@@ -10,6 +10,7 @@ import applicationroutes from './routes/applicationroutes.js'
 import recruiterRoutes from './routes/recruiterRoutes.js'
 import oauthrouter from './routes/oauthRoutes.js'
 import chatRoutes from './routes/chatRoutes.js'
+import savedJobRoutes from './routes/savedJobRoutes.js'
 import { apiLimiter, authLimiter } from "./middlewares/rateLimit.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -61,6 +62,7 @@ app.use("/api/jobs", jobroutes);
 app.use("/api/applications", applicationroutes)
 app.use("/api/recruiter", recruiterRoutes)
 app.use("/api/chat", chatRoutes)
+app.use("/api/saved-jobs", savedJobRoutes)
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is alive!" });
 });

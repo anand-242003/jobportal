@@ -228,6 +228,30 @@
     box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
 }
 
+.withdrawButton {
+    background: #ef4444;
+    color: white;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.withdrawButton:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+}
+
+.withdrawButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .rejectionMessage {
     display: flex;
     align-items: flex-start;

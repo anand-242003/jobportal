@@ -48,24 +48,29 @@ export default function DashboardPage() {
   }, [profile, setValue]);
 
   useEffect(() => {
-    const fetchApplicationStats = async () => {
+    const fetchStats = async () => {
       if (!profile || profile.role === "Employer" || loading) return;
 
       try {
-        const res = await axiosInstance.get("/applications/my-applications");
+        const [appsRes, savedRes] = await Promise.all([
+          axiosInstance.get("/applications/my-applications"),
+          axiosInstance.get("/saved-jobs/my-saved-jobs")
+        ]);
+        
         setStats(prev => ({
           ...prev,
-          applicationsCount: res.data.length || 0
+          applicationsCount: appsRes.data.length || 0,
+          savedJobsCount: savedRes.data.length || 0
         }));
       } catch (error) {
-        console.error("Failed to fetch applications:", error);
+        console.error("Failed to fetch stats:", error);
         if (error.response?.status === 401) {
           console.log("User not authenticated yet");
         }
       }
     };
 
-    fetchApplicationStats();
+    fetchStats();
   }, [profile, loading]);
 
   const submit = async (data) => {
@@ -181,47 +186,49 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className={styles.statsGrid}>
-        <Link href="/applications" className={styles.statCardLink}>
-          <div className={styles.statCard}>
-            <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))' }}>
+      {profile.role !== "Employer" && (
+        <div className={styles.statsGrid}>
+          <Link href="/applications" className={styles.statCardLink}>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className={styles.statInfo}>
+                <h3>Applications</h3>
+                <p className={styles.statNumber}>{stats.applicationsCount}</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/saved-jobs" className={styles.statCardLink}>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--accent), var(--danger))' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className={styles.statInfo}>
+                <h3>Saved Jobs</h3>
+                <p className={styles.statNumber}>{stats.savedJobsCount}</p>
+              </div>
+            </div>
+          </Link>
+
+          <div className={styles.statCard} onClick={() => setShowProfileEdit(true)} style={{ cursor: 'pointer' }}>
+            <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--secondary), var(--accent))' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </div>
             <div className={styles.statInfo}>
-              <h3>Applications</h3>
-              <p className={styles.statNumber}>{stats.applicationsCount}</p>
+              <h3>Profile Strength</h3>
+              <p className={styles.statNumber}>{stats.profileStrength}%</p>
             </div>
-          </div>
-        </Link>
-
-        <Link href="/jobs" className={styles.statCardLink}>
-          <div className={styles.statCard}>
-            <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--accent), var(--danger))' }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div className={styles.statInfo}>
-              <h3>Saved Jobs</h3>
-              <p className={styles.statNumber}>{stats.savedJobsCount}</p>
-            </div>
-          </div>
-        </Link>
-
-        <div className={styles.statCard} onClick={() => setShowProfileEdit(true)} style={{ cursor: 'pointer' }}>
-          <div className={styles.statIcon} style={{ background: 'linear-gradient(135deg, var(--secondary), var(--accent))' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div className={styles.statInfo}>
-            <h3>Profile Strength</h3>
-            <p className={styles.statNumber}>{stats.profileStrength}%</p>
           </div>
         </div>
-      </div>
+      )}
 
       <div className={styles.profileSection}>
         <div className={styles.profileHeader}>

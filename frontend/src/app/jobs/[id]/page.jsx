@@ -14,6 +14,8 @@ export default function JobDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
   const [msgType, setMsgType] = useState("");
 
@@ -47,22 +49,60 @@ export default function JobDetailsPage() {
     if (id) fetchJob();
   }, [id]);
 
-  // Check if user already applied
+  // Check if user already applied and if job is saved
   useEffect(() => {
-    const checkApplication = async () => {
+    const checkStatus = async () => {
       if (!user || user.role !== "Student") return;
       
       try {
-        const { data } = await axiosInstance.get("/applications/my-applications");
-        const alreadyApplied = data.some(app => app.jobId === id);
+        const [appsRes, savedRes] = await Promise.all([
+          axiosInstance.get("/applications/my-applications"),
+          axiosInstance.get(`/saved-jobs/check/${id}`)
+        ]);
+        
+        const alreadyApplied = appsRes.data.some(app => app.jobId === id);
         setHasApplied(alreadyApplied);
+        setIsSaved(savedRes.data.isSaved);
       } catch (error) {
-        console.error("Error checking application:", error);
+        console.error("Error checking status:", error);
       }
     };
 
-    checkApplication();
+    checkStatus();
   }, [user, id]);
+
+  const handleSaveToggle = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+
+    if (user.role !== "Student") {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      if (isSaved) {
+        await axiosInstance.delete(`/saved-jobs/${id}`);
+        setIsSaved(false);
+        setMsg("Job removed from saved");
+      } else {
+        await axiosInstance.post(`/saved-jobs/${id}`);
+        setIsSaved(true);
+        setMsg("Job saved successfully!");
+      }
+      setMsgType("success");
+    } catch (error) {
+      setMsg(error.response?.data?.message || "Failed to save job");
+      setMsgType("error");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleApply = async () => {
     if (!user) {
@@ -127,13 +167,27 @@ export default function JobDetailsPage() {
           </div>
 
           {user?.role === "Student" && (
-            <button
-              className={styles.applyButton}
-              onClick={handleApply}
-              disabled={applying || hasApplied || msgType === "success"}
-            >
-              {applying ? "Applying..." : (hasApplied || msgType === "success") ? "Applied ✓" : "Apply Now"}
-            </button>
+            <div className={styles.actionButtons}>
+              <button
+                type="button"
+                className={`${styles.saveButton} ${isSaved ? styles.saved : ''}`}
+                onClick={(e) => handleSaveToggle(e)}
+                disabled={saving}
+                title={isSaved ? "Remove from saved" : "Save job"}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={styles.applyButton}
+                onClick={handleApply}
+                disabled={applying || hasApplied || msgType === "success"}
+              >
+                {applying ? "Applying..." : (hasApplied || msgType === "success") ? "Applied ✓" : "Apply Now"}
+              </button>
+            </div>
           )}
         </div>
 

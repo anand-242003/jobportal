@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/context/userContext";
 import { useChat } from "@/context/chatContext";
@@ -8,7 +8,7 @@ import styles from "./Chat.module.css";
 import ConversationList from "./ConversationList";
 import MessageThread from "./MessageThread";
 
-export default function ChatPage() {
+function ChatContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user, loading } = useUser();
@@ -98,5 +98,17 @@ export default function ChatPage() {
                 </div>
             )}
         </>
+    );
+}
+
+export default function ChatPage() {
+    return (
+        <Suspense fallback={
+            <div style={{ padding: "40px", textAlign: "center" }}>
+                Loading chat...
+            </div>
+        }>
+            <ChatContent />
+        </Suspense>
     );
 }

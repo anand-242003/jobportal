@@ -125,12 +125,7 @@ export const getOrCreateConversation = async (req, res) => {
         });
 
         if (!conversation) {
-            if (currentUser.role !== 'Employer' && currentUser.role !== 'Admin') {
-                return res.status(403).json({ 
-                    message: "Only recruiters can initiate conversations. Wait for the recruiter to contact you." 
-                });
-            }
-
+            // Check if there's an application context
             if (applicationId) {
                 const application = await prisma.application.findUnique({
                     where: { id: applicationId },
@@ -141,15 +136,27 @@ export const getOrCreateConversation = async (req, res) => {
                     return res.status(404).json({ message: "Application not found" });
                 }
 
+                // Only allow conversations for accepted applications
                 if (application.status !== 'Accepted') {
                     return res.status(403).json({ 
                         message: "Can only start conversations with accepted applications" 
                     });
                 }
 
-                if (application.job.createdById !== userId) {
+                // Verify the conversation is between the job seeker and employer
+                const isJobSeeker = application.applicantId === userId;
+                const isEmployer = application.job.createdById === userId;
+
+                if (!isJobSeeker && !isEmployer) {
                     return res.status(403).json({ 
-                        message: "You can only start conversations for your own job postings" 
+                        message: "You are not authorized to start this conversation" 
+                    });
+                }
+            } else {
+                // For conversations without application context, only employers can initiate
+                if (currentUser.role !== 'Employer' && currentUser.role !== 'Admin') {
+                    return res.status(403).json({ 
+                        message: "Only employers can initiate conversations without an application context" 
                     });
                 }
             }
