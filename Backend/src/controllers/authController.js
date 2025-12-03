@@ -74,22 +74,35 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Login attempt for:", email);
 
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    if (!user) {
+      console.log("User not found:", email);
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
+    console.log("User found, checking password...");
     const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    console.log("Password match:", isMatch);
+    
+    if (!isMatch) {
+      console.log("Password mismatch for:", email);
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
+    console.log("Generating tokens...");
     const token = generateToken(user);
     const refreshToken = RefreshToken(user);
 
+    console.log("Updating refresh token in database...");
     await prisma.user.update({
       where: { id: user.id },
       data: { refreshToken: refreshToken }
     });
 
     const isProduction = process.env.NODE_ENV === 'production';
+    console.log("Setting cookies, isProduction:", isProduction);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -107,10 +120,11 @@ export const login = async (req, res) => {
       path: "/",
     });
 
+    console.log("Login successful for:", email);
     res.json({ message: "Login successful", user: { id: user.id, fullName: user.fullName } });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
