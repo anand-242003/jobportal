@@ -34,7 +34,7 @@ A modern, full-featured job portal connecting employers with talented job seeker
 
 ## 🚀 Tech Stack
 
-**Frontend:** Next.js 14, React, Tailwind CSS, Socket.io Client
+**Frontend:** Next.js 14, React, module.css, Socket.io Client
 
 **Backend:** Node.js, Express, MongoDB, Prisma, Socket.io, JWT
 
