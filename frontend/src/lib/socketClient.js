@@ -15,6 +15,16 @@ export const initializeSocket = () => {
         throw new Error("Socket URL not configured. Please set NEXT_PUBLIC_SOCKET_URL in your environment variables.");
     }
 
+    // Get token from cookie for authentication
+    const getTokenFromCookie = () => {
+        if (typeof document === 'undefined') return null;
+        const cookies = document.cookie.split(';');
+        const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+        return tokenCookie ? tokenCookie.split('=')[1] : null;
+    };
+
+    const token = getTokenFromCookie();
+
     socket = io(socketURL, {
         withCredentials: true,
         autoConnect: true,
@@ -23,7 +33,8 @@ export const initializeSocket = () => {
         reconnectionDelayMax: 5000,
         reconnectionAttempts: 10,
         timeout: 10000,
-        transports: ['websocket', 'polling']
+        transports: ['websocket', 'polling'],
+        auth: token ? { token } : {}
     });
 
     socket.on("connect", () => {

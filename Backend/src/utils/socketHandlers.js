@@ -5,17 +5,23 @@ import prisma from "../config/db.js";
 export const initializeSocketHandlers = (io) => {
     io.use(async (socket, next) => {
         try {
+            // Try to get token from auth query parameter first (for cross-origin)
+            const tokenFromQuery = socket.handshake.auth?.token;
+            
+            // Then try cookies (for same-origin)
             const cookies = socket.handshake.headers.cookie;
+            let token = tokenFromQuery;
 
-            if (!cookies) {
-                return next(new Error("Authentication error: No cookies provided"));
+            if (!token && cookies) {
+                const parsedCookies = cookie.parse(cookies);
+                token = parsedCookies.token;
             }
 
-            const parsedCookies = cookie.parse(cookies);
-            const token = parsedCookies.token;
-
             if (!token) {
-                return next(new Error("Authentication error: No token provided"));
+                console.warn("Socket connection without authentication");
+                // Allow connection but mark as unauthenticated
+                socket.user = null;
+                return next();
             }
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -26,21 +32,28 @@ export const initializeSocketHandlers = (io) => {
             });
 
             if (!user) {
-                return next(new Error("Authentication error: User not found"));
+                console.warn("Socket token valid but user not found");
+                socket.user = null;
+                return next();
             }
 
             socket.user = user;
             next();
         } catch (error) {
             console.error("Socket authentication error:", error);
-            return next(new Error("Authentication error"));
+            // Allow connection but mark as unauthenticated
+            socket.user = null;
+            next();
         }
     });
 
     io.on("connection", (socket) => {
-        console.log(`User connected: ${socket.user.fullName} (${socket.user.id})`);
-
-        socket.join(socket.user.id);
+        if (socket.user) {
+            console.log(`User connected: ${socket.user.fullName} (${socket.user.id})`);
+            socket.join(socket.user.id);
+        } else {
+            console.log(`Anonymous socket connected: ${socket.id}`);
+        }
 
         socket.on("join_conversation", (conversationId) => {
             socket.join(conversationId);
