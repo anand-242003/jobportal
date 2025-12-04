@@ -24,7 +24,10 @@ if (!process.env.FRONTEND_URL) {
   process.exit(1);
 }
 
-const allowedOrigins = [process.env.FRONTEND_URL];
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_PRODUCTION
+].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
