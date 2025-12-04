@@ -22,13 +22,17 @@ export default function LoginPage() {
 
       const res = await axiosInstance.post("/auth/login", data);
       console.log("Login successful:", res.data);
+      console.log("Token received:", !!res.data.token);
+      console.log("RefreshToken received:", !!res.data.refreshToken);
 
       // Store tokens in localStorage
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
+        console.log("Token stored in localStorage");
       }
       if (res.data.refreshToken) {
         localStorage.setItem("refreshToken", res.data.refreshToken);
+        console.log("RefreshToken stored in localStorage");
       }
 
       const user = res.data.user;
