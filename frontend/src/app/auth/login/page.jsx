@@ -23,18 +23,21 @@ export default function LoginPage() {
       const res = await axiosInstance.post("/auth/login", data);
       console.log("Login successful:", res.data);
 
+      // Store tokens in localStorage
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+      if (res.data.refreshToken) {
+        localStorage.setItem("refreshToken", res.data.refreshToken);
+      }
 
-      const userRes = await axiosInstance.get("/users/profile");
-      const user = userRes.data;
-      console.log("User profile loaded:", user);
-
+      const user = res.data.user;
+      console.log("User data:", user);
 
       setMessage("Login successful! Redirecting...");
       setIsError(false);
 
-
       await new Promise(resolve => setTimeout(resolve, 1000));
-
 
       const redirectUrl = user.role === "Employer"
         ? "/dashboard/employer"

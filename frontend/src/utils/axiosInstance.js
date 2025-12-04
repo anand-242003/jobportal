@@ -1,12 +1,26 @@
 import axios from "axios";
 
-// Use relative URL to go through Next.js rewrites (keeps cookies on same domain)
-const baseURL = '/api';
+// Use direct backend URL for production
+const baseURL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
   withCredentials: true
 });
+
+// Add Authorization header with token from localStorage
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 let isRefreshing = false;
 
@@ -33,11 +47,29 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axiosInstance.post("/auth/refresh");
+        const refreshToken = typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
+        if (!refreshToken) {
+          throw new Error("No refresh token");
+        }
+
+        const response = await axiosInstance.post("/auth/refresh", { refreshToken });
+        
+        if (typeof window !== "undefined" && response.data.token) {
+          localStorage.setItem("token", response.data.token);
+          if (response.data.refreshToken) {
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+          }
+        }
+
         isRefreshing = false;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         isRefreshing = false;
+
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("refreshToken");
+        }
 
         const publicPages = ["/", "/jobs", "/companies", "/auth/login", "/auth/signup", "/chat"];
         const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
