@@ -62,7 +62,9 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      user: { id: newUser.id, fullName: newUser.fullName, email: newUser.email },
+      user: { id: newUser.id, fullName: newUser.fullName, email: newUser.email, role: newUser.role },
+      token,
+      refreshToken
     });
   } catch (error) {
     console.error(error);
@@ -121,7 +123,12 @@ export const login = async (req, res) => {
     });
 
     console.log("Login successful for:", email);
-    res.json({ message: "Login successful", user: { id: user.id, fullName: user.fullName } });
+    res.json({ 
+      message: "Login successful", 
+      user: { id: user.id, fullName: user.fullName, role: user.role, email: user.email },
+      token,
+      refreshToken
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -160,8 +167,10 @@ export const handleRefreshToken = async (req, res) => {
   console.log("Handle Refresh Token Called");
   console.log("Cookies received:", req.cookies);
   console.log("Headers:", req.headers.cookie);
+  console.log("Body:", req.body);
 
-  const refreshToken = req.cookies.refreshToken;
+  // Try to get refresh token from cookie first, then from body
+  const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
   if (!refreshToken) {
     console.log("No refresh token in cookies");
@@ -220,7 +229,11 @@ export const handleRefreshToken = async (req, res) => {
     });
 
     console.log("Tokens refreshed successfully");
-    res.json({ message: "Token refreshed successfully" });
+    res.json({ 
+      message: "Token refreshed successfully",
+      token: newAccessToken,
+      refreshToken: newRefreshToken
+    });
 
   } catch (error) {
     console.error("Refresh token error:", error.message);

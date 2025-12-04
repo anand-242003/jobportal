@@ -18,6 +18,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for Render deployment (needed for rate limiting and IP detection)
+app.set('trust proxy', 1);
+
 // Require FRONTEND_URL to be set
 if (!process.env.FRONTEND_URL) {
   console.error("❌ ERROR: FRONTEND_URL environment variable is required");
