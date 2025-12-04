@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+// Use relative URL to go through Next.js rewrites (keeps cookies on same domain)
+const baseURL = '/api';
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
