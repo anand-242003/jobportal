@@ -56,12 +56,20 @@ export const initializeSocketHandlers = (io) => {
         }
 
         socket.on("join_conversation", (conversationId) => {
+            if (!socket.user) {
+                return socket.emit("error", { message: "Not authenticated. Please login." });
+            }
             socket.join(conversationId);
             console.log(`User ${socket.user.id} joined conversation ${conversationId}`);
         });
 
         socket.on("send_message", async (data) => {
             try {
+                // Check if user is authenticated
+                if (!socket.user) {
+                    return socket.emit("error", { message: "Not authenticated. Please login." });
+                }
+
                 const { conversationId, recipientId, content } = data;
 
                 const conversation = await prisma.conversation.findFirst({
@@ -133,6 +141,7 @@ export const initializeSocketHandlers = (io) => {
         });
 
         socket.on("typing", (data) => {
+            if (!socket.user) return;
             const { conversationId, recipientId } = data;
             socket.to(recipientId).emit("user_typing", {
                 userId: socket.user.id,
@@ -141,6 +150,7 @@ export const initializeSocketHandlers = (io) => {
         });
 
         socket.on("stop_typing", (data) => {
+            if (!socket.user) return;
             const { conversationId, recipientId } = data;
             socket.to(recipientId).emit("user_stopped_typing", {
                 userId: socket.user.id,
