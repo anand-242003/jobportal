@@ -30,20 +30,27 @@ export function ChatProvider({ children }) {
                 });
 
                 const handleNewMessage = ({ message, conversationId }) => {
-                    console.log("Received new_message event:", message);
-                    
                     setMessages(prev => {
                         const existingMessages = prev[conversationId] || [];
-                        const filteredMessages = existingMessages.filter(m => !m._isOptimistic);
                         
-                        const messageExists = filteredMessages.some(m => m.id === message.id);
+                        const messageExists = existingMessages.some(m => m.id === message.id);
                         if (messageExists) {
                             return prev;
                         }
                         
+                        const updatedMessages = existingMessages.filter(m => {
+                            if (!m._isOptimistic) return true;
+                            if (m.senderId === message.senderId && 
+                                m.content === message.content &&
+                                Math.abs(new Date(m.createdAt) - new Date(message.createdAt)) < 5000) {
+                                return false;
+                            }
+                            return true;
+                        });
+                        
                         return {
                             ...prev,
-                            [conversationId]: [...filteredMessages, message]
+                            [conversationId]: [...updatedMessages, message]
                         };
                     });
 
@@ -63,6 +70,34 @@ export function ChatProvider({ children }) {
 
                 socket.on("new_message", handleNewMessage);
                 socket.on("new_message_notification", handleNewMessage);
+
+                socket.on("message_sent", ({ message, conversationId }) => {
+                    setMessages(prev => {
+                        const existingMessages = prev[conversationId] || [];
+                        
+                        const updatedMessages = existingMessages.map(m => {
+                            if (m._isOptimistic && 
+                                m.senderId === message.senderId && 
+                                m.content === message.content) {
+                                return message;
+                            }
+                            return m;
+                        });
+                        
+                        const hasRealMessage = updatedMessages.some(m => m.id === message.id);
+                        if (!hasRealMessage) {
+                            return {
+                                ...prev,
+                                [conversationId]: [...existingMessages.filter(m => !m._isOptimistic || m.content !== message.content), message]
+                            };
+                        }
+                        
+                        return {
+                            ...prev,
+                            [conversationId]: updatedMessages
+                        };
+                    });
+                });
 
                 socket.on("user_typing", ({ userId, conversationId }) => {
                     setTypingUsers(prev => ({
