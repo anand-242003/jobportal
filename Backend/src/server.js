@@ -7,9 +7,8 @@ import { initializeSocketHandlers } from "./utils/socketHandlers.js";
 dotenv.config();
 const PORT = process.env.PORT || 5001;
 
-// Validate required env vars
 if (!process.env.FRONTEND_URL) {
-  console.error("❌ ERROR: FRONTEND_URL environment variable is required");
+  console.error("ERROR: FRONTEND_URL environment variable is required");
   process.exit(1);
 }
 
@@ -23,7 +22,6 @@ const allowedOrigins = [
 const io = new Server(httpServer, {
   cors: {
     origin: (origin, callback) => {
-      // Allow requests with no origin or from allowed origins or Vercel previews
       if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
         callback(null, true);
       } else {
@@ -37,9 +35,7 @@ const io = new Server(httpServer, {
 initializeSocketHandlers(io);
 
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📡 Socket.io server ready`);
-  console.log(`🌐 Allowed origin: ${process.env.FRONTEND_URL}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 export { io };

@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 export const authmiddleware = (req, res, next) => {
-  // Try to get token from cookie first, then from Authorization header
   let token = req.cookies.token;
   
   if (!token && req.headers.authorization) {
@@ -17,12 +16,9 @@ export const authmiddleware = (req, res, next) => {
   }
 
   try {
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     req.user = decoded;
     next();
-
   } catch (error) {
     return res.status(401).json({ message: "Invalid or expired token" });
   }

@@ -20,11 +20,15 @@ export default function Header() {
     setLoggingOut(true);
     try {
       await axiosInstance.post("/auth/logout");
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
       setUser(null);
       window.location.href = "/";
     } catch (error) {
-      console.error("Logout failed:", error);
-      setLoggingOut(false);
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      setUser(null);
+      window.location.href = "/";
     }
   };
 

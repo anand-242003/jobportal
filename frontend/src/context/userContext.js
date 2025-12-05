@@ -13,12 +13,21 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data } = await axiosInstance.get("/users/profile");
         setUser(data);
       } catch (error) {
-        console.log("Not authenticated or session expired");
         setUser(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
       } finally {
         setLoading(false);
       }

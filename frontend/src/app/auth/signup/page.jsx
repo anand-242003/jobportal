@@ -43,13 +43,21 @@ export default function SignupPage() {
       const { confirmPassword, ...signupData } = data;
       await axiosInstance.post("/auth/signup", signupData);
       
-      await axiosInstance.post("/auth/login", {
+      const loginRes = await axiosInstance.post("/auth/login", {
         email: data.email,
         password: data.password,
       });
 
-      const userRes = await axiosInstance.get("/users/profile");
-      const user = userRes.data;
+      if (loginRes.data.token) {
+        localStorage.setItem("token", loginRes.data.token);
+      }
+      if (loginRes.data.refreshToken) {
+        localStorage.setItem("refreshToken", loginRes.data.refreshToken);
+      }
+
+      const user = loginRes.data.user;
+
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const redirectUrl = user.role === "Employer" ? "/dashboard/employer" : "/jobs";
       window.location.href = redirectUrl;

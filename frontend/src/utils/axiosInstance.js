@@ -15,9 +15,6 @@ axiosInstance.interceptors.request.use(
       const token = localStorage.getItem("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log(`✅ Token added to ${config.method?.toUpperCase()} ${config.url}`);
-      } else {
-        console.warn(`⚠️ No token found for ${config.method?.toUpperCase()} ${config.url}`);
       }
     }
     return config;
@@ -36,7 +33,6 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (!error.response) {
-      console.error("Network error - cannot reach backend");
       return Promise.reject(error);
     }
 
@@ -81,7 +77,6 @@ axiosInstance.interceptors.response.use(
           !publicPages.includes(currentPath) &&
           !currentPath.startsWith("/jobs/") &&
           !currentPath.includes("/auth/")) {
-          console.log("Session expired, redirecting to login");
           window.location.href = "/auth/login";
         }
 

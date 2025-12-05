@@ -76,35 +76,27 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Login attempt for:", email);
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      console.log("User not found:", email);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    console.log("User found, checking password...");
     const isMatch = await comparePassword(password, user.password);
-    console.log("Password match:", isMatch);
     
     if (!isMatch) {
-      console.log("Password mismatch for:", email);
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    console.log("Generating tokens...");
     const token = generateToken(user);
     const refreshToken = RefreshToken(user);
 
-    console.log("Updating refresh token in database...");
     await prisma.user.update({
       where: { id: user.id },
       data: { refreshToken: refreshToken }
     });
 
     const isProduction = process.env.NODE_ENV === 'production';
-    console.log("Setting cookies, isProduction:", isProduction);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -122,7 +114,6 @@ export const login = async (req, res) => {
       path: "/",
     });
 
-    console.log("Login successful for:", email);
     res.json({ 
       message: "Login successful", 
       user: { id: user.id, fullName: user.fullName, role: user.role, email: user.email },
@@ -130,8 +121,7 @@ export const login = async (req, res) => {
       refreshToken
     });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -164,22 +154,14 @@ export const logout = async (req, res) => {
 };
 
 export const handleRefreshToken = async (req, res) => {
-  console.log("Handle Refresh Token Called");
-  console.log("Cookies received:", req.cookies);
-  console.log("Headers:", req.headers.cookie);
-  console.log("Body:", req.body);
-
-  // Try to get refresh token from cookie first, then from body
   const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
   if (!refreshToken) {
-    console.log("No refresh token in cookies");
     return res.status(401).json({ message: "Access denied. No refresh token found." });
   }
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    console.log("Token verified. User ID:", decoded.id);
 
     const user = await prisma.user.findFirst({
       where: {
@@ -189,7 +171,6 @@ export const handleRefreshToken = async (req, res) => {
     });
 
     if (!user) {
-      console.log("Token mismatch or user not found in DB");
       await prisma.user.update({
         where: { id: decoded.id },
         data: { refreshToken: null }
@@ -199,8 +180,6 @@ export const handleRefreshToken = async (req, res) => {
       res.clearCookie("refreshToken");
       return res.status(403).json({ message: "Invalid refresh token. Please login again." });
     }
-
-    console.log("User found. Rotating tokens...");
 
     const newAccessToken = generateToken(user);
     const newRefreshToken = RefreshToken(user);
@@ -228,7 +207,6 @@ export const handleRefreshToken = async (req, res) => {
       path: "/",
     });
 
-    console.log("Tokens refreshed successfully");
     res.json({ 
       message: "Token refreshed successfully",
       token: newAccessToken,
@@ -236,7 +214,6 @@ export const handleRefreshToken = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Refresh token error:", error.message);
     res.status(403).json({ message: "Invalid or expired refresh token" });
   }
 };

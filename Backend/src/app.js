@@ -18,12 +18,10 @@ dotenv.config();
 
 const app = express();
 
-// Trust proxy for Render deployment (needed for rate limiting and IP detection)
 app.set('trust proxy', 1);
 
-// Require FRONTEND_URL to be set
 if (!process.env.FRONTEND_URL) {
-  console.error("❌ ERROR: FRONTEND_URL environment variable is required");
+  console.error("ERROR: FRONTEND_URL environment variable is required");
   process.exit(1);
 }
 
@@ -34,22 +32,9 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc)
-    if (!origin) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
-    
-    // Allow exact matches from allowed origins
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    
-    // Allow all Vercel preview deployments (*.vercel.app)
-    if (origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
-    
-    console.error("❌ CORS blocked origin:", origin);
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -62,12 +47,7 @@ app.use(apiLimiter);
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  if (req.url.startsWith('/api/')) {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  }
-  next();
-});
+
 
 app.use(cookieParser());
 app.use(passport.initialize());

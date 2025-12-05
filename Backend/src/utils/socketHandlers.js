@@ -5,10 +5,7 @@ import prisma from "../config/db.js";
 export const initializeSocketHandlers = (io) => {
     io.use(async (socket, next) => {
         try {
-            // Try to get token from auth query parameter first (for cross-origin)
             const tokenFromQuery = socket.handshake.auth?.token;
-            
-            // Then try cookies (for same-origin)
             const cookies = socket.handshake.headers.cookie;
             let token = tokenFromQuery;
 
@@ -18,8 +15,6 @@ export const initializeSocketHandlers = (io) => {
             }
 
             if (!token) {
-                console.warn("Socket connection without authentication");
-                // Allow connection but mark as unauthenticated
                 socket.user = null;
                 return next();
             }
@@ -32,7 +27,6 @@ export const initializeSocketHandlers = (io) => {
             });
 
             if (!user) {
-                console.warn("Socket token valid but user not found");
                 socket.user = null;
                 return next();
             }
@@ -40,8 +34,6 @@ export const initializeSocketHandlers = (io) => {
             socket.user = user;
             next();
         } catch (error) {
-            console.error("Socket authentication error:", error);
-            // Allow connection but mark as unauthenticated
             socket.user = null;
             next();
         }
@@ -49,10 +41,7 @@ export const initializeSocketHandlers = (io) => {
 
     io.on("connection", (socket) => {
         if (socket.user) {
-            console.log(`User connected: ${socket.user.fullName} (${socket.user.id})`);
             socket.join(socket.user.id);
-        } else {
-            console.log(`Anonymous socket connected: ${socket.id}`);
         }
 
         socket.on("join_conversation", (conversationId) => {
@@ -60,12 +49,10 @@ export const initializeSocketHandlers = (io) => {
                 return socket.emit("error", { message: "Not authenticated. Please login." });
             }
             socket.join(conversationId);
-            console.log(`User ${socket.user.id} joined conversation ${conversationId}`);
         });
 
         socket.on("send_message", async (data) => {
             try {
-                // Check if user is authenticated
                 if (!socket.user) {
                     return socket.emit("error", { message: "Not authenticated. Please login." });
                 }
@@ -116,8 +103,6 @@ export const initializeSocketHandlers = (io) => {
                         lastMessageAt: new Date()
                     }
                 });
-
-                console.log(`Emitting new_message to conversation ${conversationId}`);
                 
                 io.to(conversationId).emit("new_message", {
                     message,
@@ -135,7 +120,6 @@ export const initializeSocketHandlers = (io) => {
                 });
 
             } catch (error) {
-                console.error("Error sending message:", error);
                 socket.emit("error", { message: "Failed to send message" });
             }
         });
@@ -158,12 +142,6 @@ export const initializeSocketHandlers = (io) => {
             });
         });
 
-        socket.on("disconnect", () => {
-            if (socket.user) {
-                console.log(`User disconnected: ${socket.user.fullName} (${socket.user.id})`);
-            } else {
-                console.log(`Anonymous socket disconnected: ${socket.id}`);
-            }
-        });
+        socket.on("disconnect", () => {});
     });
 };

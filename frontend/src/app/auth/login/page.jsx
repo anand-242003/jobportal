@@ -19,49 +19,29 @@ export default function LoginPage() {
     setIsError(false);
 
     try {
-
       const res = await axiosInstance.post("/auth/login", data);
-      console.log("Login successful:", res.data);
-      console.log("Token received:", !!res.data.token);
-      console.log("RefreshToken received:", !!res.data.refreshToken);
 
-      // Store tokens in localStorage
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        console.log("Token stored in localStorage");
       }
       if (res.data.refreshToken) {
         localStorage.setItem("refreshToken", res.data.refreshToken);
-        console.log("RefreshToken stored in localStorage");
       }
 
       const user = res.data.user;
-      console.log("User data:", user);
 
       setMessage("Login successful! Redirecting...");
       setIsError(false);
 
-      // Verify tokens are in localStorage before redirecting
-      const storedToken = localStorage.getItem("token");
-      const storedRefreshToken = localStorage.getItem("refreshToken");
-      console.log("Tokens in localStorage before redirect:", {
-        token: !!storedToken,
-        refreshToken: !!storedRefreshToken
-      });
-
-      // Longer delay to ensure localStorage is fully written
       await new Promise(resolve => setTimeout(resolve, 500));
 
       const redirectUrl = user.role === "Employer"
         ? "/dashboard/employer"
         : "/jobs";
 
-      console.log("Redirecting to:", redirectUrl);
-      // Use window.location for full page reload to ensure fresh state
       window.location.href = redirectUrl;
 
     } catch (err) {
-      console.error("Login error:", err);
       setIsError(true);
       if (err.response?.status === 401) {
         setMessage("Invalid email or password. Please try again.");
