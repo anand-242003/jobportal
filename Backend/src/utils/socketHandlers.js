@@ -149,7 +149,11 @@ export const initializeSocketHandlers = (io) => {
         });
 
         socket.on("disconnect", () => {
-            console.log(`User disconnected: ${socket.user.fullName} (${socket.user.id})`);
+            if (socket.user) {
+                console.log(`User disconnected: ${socket.user.fullName} (${socket.user.id})`);
+            } else {
+                console.log(`Anonymous socket disconnected: ${socket.id}`);
+            }
         });
     });
 };
