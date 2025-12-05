@@ -41,13 +41,23 @@ export default function LoginPage() {
       setMessage("Login successful! Redirecting...");
       setIsError(false);
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Verify tokens are in localStorage before redirecting
+      const storedToken = localStorage.getItem("token");
+      const storedRefreshToken = localStorage.getItem("refreshToken");
+      console.log("Tokens in localStorage before redirect:", {
+        token: !!storedToken,
+        refreshToken: !!storedRefreshToken
+      });
+
+      // Longer delay to ensure localStorage is fully written
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const redirectUrl = user.role === "Employer"
         ? "/dashboard/employer"
         : "/jobs";
 
       console.log("Redirecting to:", redirectUrl);
+      // Use window.location for full page reload to ensure fresh state
       window.location.href = redirectUrl;
 
     } catch (err) {

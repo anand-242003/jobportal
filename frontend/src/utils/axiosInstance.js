@@ -15,6 +15,9 @@ axiosInstance.interceptors.request.use(
       const token = localStorage.getItem("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log(`✅ Token added to ${config.method?.toUpperCase()} ${config.url}`);
+      } else {
+        console.warn(`⚠️ No token found for ${config.method?.toUpperCase()} ${config.url}`);
       }
     }
     return config;
