@@ -83,9 +83,7 @@ export const googleCallback = (req, res, next) => {
                 path: "/",
             });
 
-            const redirectUrl = user.role === "Employer"
-                ? `${frontendUrl}/dashboard/employer`
-                : `${frontendUrl}/jobs`;
+            const redirectUrl = `${frontendUrl}/auth/oauth-success?token=${accessToken}&refreshToken=${refreshToken}&role=${user.role}`;
 
             res.redirect(redirectUrl);
         } catch (error) {
