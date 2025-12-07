@@ -6,3 +6,10 @@ node_modules
 .env.development
 
 /generated/prisma
+
+# Logs
+*.log
+backend.log
+
+# Temporary scripts
+fix-*.js
