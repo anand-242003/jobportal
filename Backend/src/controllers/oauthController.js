@@ -9,6 +9,7 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
+            passReqToCallback: false,
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -41,17 +42,20 @@ passport.use(
 
 export const googleAuth = passport.authenticate("google", {
     scope: ["profile", "email"],
+    accessType: "offline",
+    prompt: "consent"
 });
 
 export const googleCallback = (req, res, next) => {
     passport.authenticate("google", async (err, user) => {
         const frontendUrl = process.env.FRONTEND_URL;
-        
+
         if (!frontendUrl) {
             console.error("❌ FRONTEND_URL not configured");
             return res.status(500).json({ message: "Server configuration error" });
         }
-        
+        console.log("user", user, err)
+
         if (err || !user) {
             return res.redirect(`${frontendUrl}/auth/login?error=oauth_failed`);
         }
