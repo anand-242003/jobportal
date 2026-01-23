@@ -15,25 +15,47 @@ passport.use(
             try {
                 const email = profile.emails[0].value;
                 const fullName = profile.displayName;
+                const googleId = profile.id;
 
-                let user = await prisma.user.findUnique({
-                    where: { email },
+                // Find existing user by email OR Google ID
+                let user = await prisma.user.findFirst({
+                    where: {
+                        OR: [
+                            { email: email },
+                            { providerId: googleId, provider: "google" }
+                        ]
+                    }
                 });
 
                 if (!user) {
+                    // Create new user for OAuth
                     user = await prisma.user.create({
                         data: {
                             email,
                             fullName,
-                            password: Math.random().toString(36).slice(-8),
+                            password: Math.random().toString(36).slice(-8), // Random password for OAuth users
                             role: "Student",
-                            phoneNumber: "",
+                            phoneNumber: null, // OAuth users don't have phone initially
+                            provider: "google",
+                            providerId: googleId,
+                            isVerified: true, // Google users are pre-verified
                         },
+                    });
+                } else if (!user.provider || !user.providerId) {
+                    // Update existing email-based user with OAuth info
+                    user = await prisma.user.update({
+                        where: { id: user.id },
+                        data: {
+                            provider: "google",
+                            providerId: googleId,
+                            isVerified: true,
+                        }
                     });
                 }
 
                 return done(null, user);
             } catch (error) {
+                console.error("❌ OAuth Error:", error);
                 return done(error, null);
             }
         }

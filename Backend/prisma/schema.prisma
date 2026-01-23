@@ -12,7 +12,7 @@ model User {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   fullName           String
   email              String   @unique
-  phoneNumber        String   @unique
+  phoneNumber        String?  @unique  // Made optional for OAuth users
   password           String
   role               Role     @default(Student)
   profileBio         String?
@@ -21,6 +21,11 @@ model User {
   resumeOriginalname String?
   profilePhoto       String?  @default("")
   refreshToken       String?
+  
+  // OAuth fields
+  provider           String?  // "google", "github", etc.
+  providerId         String?  // OAuth provider's user ID
+  isVerified         Boolean  @default(false)  // Email verification status
 
   // Relations
   createdJobs  Job[]         @relation("CreatedJobs")

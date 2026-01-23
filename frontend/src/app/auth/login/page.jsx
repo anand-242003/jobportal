@@ -71,9 +71,10 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    const oauthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    // CRITICAL: Must use absolute backend URL for OAuth
+    // Cannot use environment variable or relative path
+    const oauthUrl = "https://jobportal-oc40.onrender.com/api/auth/google";
     console.log("🔍 OAuth URL:", oauthUrl);
-    console.log("🔍 API URL env:", process.env.NEXT_PUBLIC_API_URL);
     window.location.href = oauthUrl;
   };
 

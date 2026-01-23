@@ -69,6 +69,17 @@ app.get("/api/health", (req, res) => {
     env: process.env.NODE_ENV,
     frontendUrl: process.env.FRONTEND_URL,
     googleCallbackConfigured: !!process.env.GOOGLE_CALLBACK_URL,
+    googleClientIdConfigured: !!process.env.GOOGLE_CLIENT_ID,
+    googleClientSecretConfigured: !!process.env.GOOGLE_CLIENT_SECRET,
+  });
+});
+
+// OAuth test endpoint
+app.get("/api/auth/test-oauth", (req, res) => {
+  res.json({
+    message: "OAuth endpoint is reachable",
+    googleClientId: process.env.GOOGLE_CLIENT_ID ? "Configured" : "Missing",
+    callbackUrl: process.env.GOOGLE_CALLBACK_URL || "Not set",
   });
 });
 

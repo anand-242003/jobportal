@@ -13,9 +13,12 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    const existingPhone = await prisma.user.findUnique({ where: { phoneNumber } });
-    if (existingPhone) {
-      return res.status(400).json({ message: "Phone number already exists" });
+    // Only check phone uniqueness if phone number is provided
+    if (phoneNumber) {
+      const existingPhone = await prisma.user.findUnique({ where: { phoneNumber } });
+      if (existingPhone) {
+        return res.status(400).json({ message: "Phone number already exists" });
+      }
     }
 
     const hashed = await hashPassword(password);
@@ -28,9 +31,10 @@ export const signup = async (req, res) => {
         fullName,
         email,
         password: hashed,
-        phoneNumber,
+        phoneNumber: phoneNumber || null,  // Allow null if not provided
         role: formattedRole,
         skills: skills || [],
+        isVerified: false,  // Regular signups need verification
       }
     });
 
