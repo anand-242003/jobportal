@@ -12,7 +12,7 @@ const nextConfig = {
         destination: `${baseUrl}/api/:path*`,
       },
     ];
-  },
+  }
 };
 
 export default nextConfig;

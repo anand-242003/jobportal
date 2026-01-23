@@ -13,9 +13,29 @@ function OAuthSuccessContent() {
       const token = searchParams.get("token");
       const refreshToken = searchParams.get("refreshToken");
       const role = searchParams.get("role");
+      const error = searchParams.get("error");
+
+      // Enhanced logging for debugging
+      console.log("=== OAuth Success Page Debug ===");
+      console.log("Token present:", !!token);
+      console.log("RefreshToken present:", !!refreshToken);
+      console.log("Role:", role);
+      console.log("Error param:", error);
+      console.log("==============================");
+
+      // Check for error parameter from backend
+      if (error) {
+        setError(`OAuth failed: ${error}`);
+        setTimeout(() => {
+          router.push("/auth/login?error=" + error);
+        }, 2000);
+        return;
+      }
 
       if (!token || !refreshToken) {
-        router.push("/auth/login?error=oauth_failed");
+        console.error("Missing tokens in OAuth callback");
+        setError("Missing authentication tokens");
+        router.push("/auth/login?error=missing_tokens");
         return;
       }
 
@@ -28,6 +48,7 @@ function OAuthSuccessContent() {
         const { data } = await axiosInstance.get("/users/profile");
 
         if (data) {
+          console.log("✅ OAuth verification successful");
           // Token is valid, redirect based on role
           const redirectUrl = role === "Employer" ? "/dashboard/employer" : "/jobs";
           window.location.href = redirectUrl;
@@ -41,7 +62,7 @@ function OAuthSuccessContent() {
         localStorage.removeItem("refreshToken");
 
         setTimeout(() => {
-          router.push("/auth/login?error=oauth_failed");
+          router.push("/auth/login?error=verification_failed");
         }, 2000);
       }
     };

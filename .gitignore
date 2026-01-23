@@ -1,8 +1,9 @@
-# Environment variables
+# Environment variables - NEVER COMMIT THESE!
 .env
-.env.local
-.env.production
-.env.development
+.env.*
+!.env.example
+*.env
+!*.env.example
 
 # Dependencies
 node_modules/
@@ -42,10 +43,17 @@ out/
 
 # Documentation (development only)
 *_GUIDE.md
-*_FIX.md
+*_FIX*.md
 *_STATUS.txt
 *_INSTRUCTIONS.txt
-*_CHECKLIST.md
+*_CHECKLIST*.md
+*_README.md
+*_DIAGRAM.md
 FIXES_APPLIED.md
 DEPLOYMENT_*.md
 READY_TO_DEPLOY.md
+OAUTH_*.md
+OAUTH_*.txt
+GOOGLE_*.md
+QUICK_*.txt
+test-oauth-endpoints.sh

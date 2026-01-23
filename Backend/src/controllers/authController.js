@@ -36,7 +36,7 @@ export const signup = async (req, res) => {
 
     const token = generateToken(newUser);
     const refreshToken = RefreshToken(newUser);
-
+    
     await prisma.user.update({
       where: { id: newUser.id },
       data: { refreshToken: refreshToken }

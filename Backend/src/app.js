@@ -60,6 +60,18 @@ app.use("/api/applications", applicationroutes)
 app.use("/api/recruiter", recruiterRoutes)
 app.use("/api/chat", chatRoutes)
 app.use("/api/saved-jobs", savedJobRoutes)
+
+// Health check endpoint with environment info
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+    frontendUrl: process.env.FRONTEND_URL,
+    googleCallbackConfigured: !!process.env.GOOGLE_CALLBACK_URL,
+  });
+});
+
 app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is alive!" });
 });
