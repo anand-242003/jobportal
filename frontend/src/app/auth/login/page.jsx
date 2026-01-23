@@ -71,7 +71,10 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    const oauthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    console.log("🔍 OAuth URL:", oauthUrl);
+    console.log("🔍 API URL env:", process.env.NEXT_PUBLIC_API_URL);
+    window.location.href = oauthUrl;
   };
 
   return (
